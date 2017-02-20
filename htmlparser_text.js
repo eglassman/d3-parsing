@@ -30,16 +30,18 @@
 // parser.write("Xyz <script type='text/javascript'>var foo = '<<bar>>';</ script>");
 // parser.end();
 
-const parse5 = require('parse5');
 const fs = require('fs');
+const parse5 = require('parse5');
+const utils = require('parse5-utils');
 const options = { locationInfo: true };
 
 var d3index = fs.readFileSync('../d3-example-viz/data/htmlfiles/index-239.html','utf8')
 console.log(d3index)
 
 var parsedd3index = parse5.parse(d3index,options);
+console.log(utils.flatten(parsedd3index))
 
-console.log(d3index.slice(parsedd3index.childNodes[0]['__location'].startOffset,parsedd3index.childNodes[0]['__location'].endOffset))
+//console.log(d3index.slice(parsedd3index.childNodes[0]['__location'].startOffset,parsedd3index.childNodes[0]['__location'].endOffset))
 
 // fs.readFile('../d3-example-viz/data/htmlfiles/index-239.html', 'utf8', function (err,data) {
 //   if (err) {

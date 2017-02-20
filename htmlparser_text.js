@@ -31,7 +31,21 @@
 // parser.end();
 
 const parse5 = require('parse5');
+const fs = require('fs');
 
-const document = parse5.parse('<!DOCTYPE html><html><head></head><body>Hi there!</body></html>');
+//var d3index = '';
 
-console.log(document)//.childNodes[1].tagName); //> 'html'
+fs.readFile('../d3-example-viz/data/htmlfiles/index-239.html', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  console.log(data);
+  var document = parse5.parse(data);
+  console.log(document);
+});
+
+
+
+//const document = parse5.parse('<!DOCTYPE html><html><head></head><body>Hi there!</body></html>');
+
+//console.log(document)//.childNodes[1].tagName); //> 'html'

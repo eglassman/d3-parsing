@@ -1,19 +1,22 @@
 const {JSHINT} = require('jshint');
 
 var source = [
-  'function goo() {}',
-  'foo = 3;'
+  'var canvas = document.querySelector("canvas")',
+  'context = canvas.getContext("2d");'
 ];
 var options = {
   undef: true,
   unused: true,
-  node: true
+  browser: true, //node: true,
+  asi: true
 };
-// var predef = {
-//   foo: false
-// };
-var predef = {};
+var predef = {
+  context: true
+};
+// var predef = {};
 
 JSHINT(source, options, predef);
 
 console.log(JSHINT.data());
+
+console.log(JSHINT.data()['implieds'])

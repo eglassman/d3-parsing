@@ -5,11 +5,14 @@ var source = [
   'foo = 3;'
 ];
 var options = {
-  undef: true
+  undef: true,
+  unused: true,
+  node: true
 };
-var predef = {
-  foo: false
-};
+// var predef = {
+//   foo: false
+// };
+var predef = {};
 
 JSHINT(source, options, predef);
 

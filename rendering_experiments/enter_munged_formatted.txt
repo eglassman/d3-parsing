@@ -1,0 +1,28 @@
+svg                                    .selectAll(".layer")                                             .data(layers)                                                                   .enter()
+svg                                    .selectAll(".layer")                                             .data(layers)                                                                   .enter()
+svg                                    .selectAll( ".axis")                                             .data(d3.range(angle.domain()[1]))                                              .enter()
+
+svg.append("g").attr("class", "r axis").selectAll("g")                                                  .data( r.ticks(5).slice(1))                                                     .enter()
+svg.append("g").attr("class", "a axis").selectAll("g")                                                  .data(d3.range(0, 360, 30))                                                     .enter()
+
+  g.append("g")                        .selectAll("g")                                                  .data(                data)                                                     .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(                data)                                                     .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(                data)                                                     .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(                data.columns.slice(1).reverse())                          .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(                data.columns.slice(1).reverse())                          .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(                data.columns.slice(1).reverse())                          .enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1)).offset(d3.stackOffsetExpand)(data)).enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1)).offset(d3.stackOffsetExpand)(data)).enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1))                             (data)).enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1))                             (data)).enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1))                             (data)).enter()
+  g.append("g")                        .selectAll("g")                                                  .data(d3.stack().keys(data.columns.slice(1))                             (data)).enter()
+   .append("g")                        .attr("fill", function(d) { return z(d.key); }).selectAll("path").data(function(d) { return d; })                                                .enter()
+   .append("g")                        .attr("fill", function(d) { return z(d.key); }).selectAll("path").data(function(d) { return d; })                                                .enter()
+   .append("g")                        .attr("fill", function(d) { return z(d.key); }).selectAll("path").data(function(d) { return d; })                                                .enter()
+                        
+yAxis                                  .selectAll("g")                                                  .data(y.ticks( 5).slice(1))                                                     .enter()
+yAxis                                  .selectAll("g")                                                  .data(y.ticks(10).slice(1))                                                     .enter()
+yAxis                                  .selectAll("g")                                                  .data(y.ticks(10).slice(1))                                                     .enter()
+                        
+                        

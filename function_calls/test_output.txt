@@ -1,0 +1,582 @@
+> var parsedd3index = parse5.parse(d3index,options);
+undefined
+> 
+> for (var i in parsedd3index.childNodes) {
+...     console.log('-------');
+...     console.log('i',i);
+...     console.log('node',parsedd3index.childNodes[i]);
+...     console.log('nodename',parsedd3index.childNodes[i].nodeName);
+...     console.log('loc',parsedd3index.childNodes[i]['__location']); //.startOffset,parsedd3index_flattened[i].nodeName['__location'].endOffset));
+...     var iloc = parsedd3index.childNodes[i]['__location'];
+...     if (iloc) {
+...         console.log('extracted',d3index.slice(iloc.startOffset,iloc.endOffset));
+...     } else {
+...         for (var ii in parsedd3index.childNodes[i].childNodes) {
+.....             console.log('ii',ii);
+.....             console.log('node',parsedd3index.childNodes[i].childNodes[ii]);
+.....             console.log('nodename',parsedd3index.childNodes[i].childNodes[ii].nodeName);
+.....             console.log('loc',parsedd3index.childNodes[i].childNodes[ii]['__location']);
+.....             var iiloc = parsedd3index.childNodes[i].childNodes[ii]['__location'];
+.....             if (iiloc) {
+.......                 console.log('extracted',d3index.slice(iiloc.startOffset,iiloc.endOffset));
+.......             } else {
+.......                 for (var iii in parsedd3index.childNodes[i].childNodes[ii].childNodes) {
+.........                     console.log('iii',iii);
+.........                     console.log('node',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii]);
+.........                     console.log('nodename',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].nodeName);
+.........                     console.log('loc',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii]['__location']);
+.........                     var iiiloc = parsedd3index.childNodes[i].childNodes[ii].childNodes[iii]['__location'];
+.........                     if (iiiloc) {
+...........                         console.log('extracted',d3index.slice(iiiloc.startOffset,iiiloc.endOffset));
+...........                     }
+.........                     for (var iiii in parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].childNodes) {
+...........                         console.log('iiii',iiii);
+...........                         console.log('node',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].childNodes[iiii]);
+...........                         console.log('nodename',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].childNodes[iiii].nodeName);
+...........                         console.log('loc',parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].childNodes[iiii]['__location']);
+...........                         var iiiiloc = parsedd3index.childNodes[i].childNodes[ii].childNodes[iii].childNodes[iiii]['__location'];
+...........                         if (iiiiloc) {
+.............                             console.log('extracted',d3index.slice(iiiiloc.startOffset,iiiiloc.endOffset));
+.............                         }
+...........                     }
+.........                     
+...                 }
+...             }
+...         }
+...     }
+...     console.log('-------');
+... }
+-------
+i 0
+node { nodeName: '#documentType',
+  name: 'html',
+  publicId: null,
+  systemId: null,
+  parentNode: 
+   { nodeName: '#document',
+     mode: 'no-quirks',
+     childNodes: [ [Circular], [Object] ] },
+  __location: { line: 1, col: 1, startOffset: 0, endOffset: 15 } }
+nodename #documentType
+loc { line: 1, col: 1, startOffset: 0, endOffset: 15 }
+extracted <!DOCTYPE html>
+-------
+-------
+i 1
+node { nodeName: 'html',
+  tagName: 'html',
+  attrs: [],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: 
+   [ { nodeName: 'head',
+       tagName: 'head',
+       attrs: [],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [Object],
+       parentNode: [Circular],
+       __location: null },
+     { nodeName: 'body',
+       tagName: 'body',
+       attrs: [],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [Object],
+       parentNode: [Circular],
+       __location: null } ],
+  parentNode: 
+   { nodeName: '#document',
+     mode: 'no-quirks',
+     childNodes: [ [Object], [Circular] ] },
+  __location: null }
+nodename html
+loc null
+ii 0
+node { nodeName: 'head',
+  tagName: 'head',
+  attrs: [],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: 
+   [ { nodeName: 'meta',
+       tagName: 'meta',
+       attrs: [Object],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [],
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: '#text',
+       value: '\n',
+       parentNode: [Circular],
+       __location: [Object] } ],
+  parentNode: 
+   { nodeName: 'html',
+     tagName: 'html',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Circular], [Object] ],
+     parentNode: 
+      { nodeName: '#document',
+        mode: 'no-quirks',
+        childNodes: [Object] },
+     __location: null },
+  __location: null }
+nodename head
+loc null
+iii 0
+node { nodeName: 'meta',
+  tagName: 'meta',
+  attrs: [ { name: 'charset', value: 'utf-8' } ],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: [],
+  parentNode: 
+   { nodeName: 'head',
+     tagName: 'head',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Circular], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: 
+   { line: 2,
+     col: 1,
+     startOffset: 16,
+     endOffset: 38,
+     attrs: { charset: [Object] } } }
+nodename meta
+loc { line: 2,
+  col: 1,
+  startOffset: 16,
+  endOffset: 38,
+  attrs: { charset: { line: 2, col: 7, startOffset: 22, endOffset: 37 } } }
+extracted <meta charset="utf-8">
+iii 1
+node { nodeName: '#text',
+  value: '\n',
+  parentNode: 
+   { nodeName: 'head',
+     tagName: 'head',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Circular] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: { line: 2, col: 23, startOffset: 38, endOffset: 39 } }
+nodename #text
+loc { line: 2, col: 23, startOffset: 38, endOffset: 39 }
+extracted 
+
+ii 1
+node { nodeName: 'body',
+  tagName: 'body',
+  attrs: [],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: 
+   [ { nodeName: 'canvas',
+       tagName: 'canvas',
+       attrs: [Object],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [],
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: '#text',
+       value: '\n',
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: 'script',
+       tagName: 'script',
+       attrs: [Object],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [],
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: '#text',
+       value: '\n',
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: 'script',
+       tagName: 'script',
+       attrs: [],
+       namespaceURI: 'http://www.w3.org/1999/xhtml',
+       childNodes: [Object],
+       parentNode: [Circular],
+       __location: [Object] },
+     { nodeName: '#text',
+       value: '\n',
+       parentNode: [Circular],
+       __location: [Object] } ],
+  parentNode: 
+   { nodeName: 'html',
+     tagName: 'html',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Circular] ],
+     parentNode: 
+      { nodeName: '#document',
+        mode: 'no-quirks',
+        childNodes: [Object] },
+     __location: null },
+  __location: null }
+nodename body
+loc null
+iii 0
+node { nodeName: 'canvas',
+  tagName: 'canvas',
+  attrs: 
+   [ { name: 'width', value: '960' },
+     { name: 'height', value: '500' } ],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: [],
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Circular], [Object], [Object], [Object], [Object], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: 
+   { line: 3,
+     col: 1,
+     startOffset: 39,
+     endOffset: 81,
+     attrs: { width: [Object], height: [Object] },
+     startTag: 
+      { line: 3,
+        col: 1,
+        startOffset: 39,
+        endOffset: 72,
+        attrs: [Object] },
+     endTag: { line: 3, col: 34, startOffset: 72, endOffset: 81 } } }
+nodename canvas
+loc { line: 3,
+  col: 1,
+  startOffset: 39,
+  endOffset: 81,
+  attrs: 
+   { width: { line: 3, col: 9, startOffset: 47, endOffset: 58 },
+     height: { line: 3, col: 21, startOffset: 59, endOffset: 71 } },
+  startTag: 
+   { line: 3,
+     col: 1,
+     startOffset: 39,
+     endOffset: 72,
+     attrs: { width: [Object], height: [Object] } },
+  endTag: { line: 3, col: 34, startOffset: 72, endOffset: 81 } }
+extracted <canvas width="960" height="500"></canvas>
+iii 1
+node { nodeName: '#text',
+  value: '\n',
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Circular], [Object], [Object], [Object], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: { line: 3, col: 43, startOffset: 81, endOffset: 82 } }
+nodename #text
+loc { line: 3, col: 43, startOffset: 81, endOffset: 82 }
+extracted 
+
+iii 2
+node { nodeName: 'script',
+  tagName: 'script',
+  attrs: [ { name: 'src', value: '//d3js.org/d3.v4.0.0-alpha.4.min.js' } ],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: [],
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Object], [Circular], [Object], [Object], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: 
+   { line: 4,
+     col: 1,
+     startOffset: 82,
+     endOffset: 141,
+     attrs: { src: [Object] },
+     startTag: 
+      { line: 4,
+        col: 1,
+        startOffset: 82,
+        endOffset: 132,
+        attrs: [Object] },
+     endTag: { line: 4, col: 51, startOffset: 132, endOffset: 141 } } }
+nodename script
+loc { line: 4,
+  col: 1,
+  startOffset: 82,
+  endOffset: 141,
+  attrs: { src: { line: 4, col: 9, startOffset: 90, endOffset: 131 } },
+  startTag: 
+   { line: 4,
+     col: 1,
+     startOffset: 82,
+     endOffset: 132,
+     attrs: { src: [Object] } },
+  endTag: { line: 4, col: 51, startOffset: 132, endOffset: 141 } }
+extracted <script src="//d3js.org/d3.v4.0.0-alpha.4.min.js"></script>
+iii 3
+node { nodeName: '#text',
+  value: '\n',
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Object], [Object], [Circular], [Object], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: { line: 4, col: 60, startOffset: 141, endOffset: 142 } }
+nodename #text
+loc { line: 4, col: 60, startOffset: 141, endOffset: 142 }
+extracted 
+
+iii 4
+node { nodeName: 'script',
+  tagName: 'script',
+  attrs: [],
+  namespaceURI: 'http://www.w3.org/1999/xhtml',
+  childNodes: 
+   [ { nodeName: '#text',
+       value: '\n\nvar canvas = document.querySelector("canvas"),\n    context = canvas.getContext("2d");\n\nvar width = canvas.width,\n    height = canvas.height,\n    radius = Math.min(width, height) / 2;\n\nvar colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];\n\nvar arc = d3.arc()\n    .outerRadius(radius - 10)\n    .innerRadius(radius - 70)\n    .context(context);\n\nvar labelArc = d3.arc()\n    .outerRadius(radius - 40)\n    .innerRadius(radius - 40)\n    .context(context);\n\nvar pie = d3.pie()\n    .sort(null)\n    .value(function(d) { return d.population; });\n\ncontext.translate(width / 2, height / 2);\n\nd3.requestTsv("data.tsv", function(d) {\n  d.population = +d.population;\n  return d;\n}, function(error, data) {\n  if (error) throw error;\n\n  var arcs = pie(data);\n\n  arcs.forEach(function(d, i) {\n    context.beginPath();\n    arc(d);\n    context.fillStyle = colors[i];\n    context.fill();\n  });\n\n  context.beginPath();\n  arcs.forEach(arc);\n  context.strokeStyle = "#fff";\n  context.stroke();\n\n  context.textAlign = "center";\n  context.textBaseline = "middle";\n  context.fillStyle = "#000";\n  arcs.forEach(function(d) {\n    var c = labelArc.centroid(d);\n    context.fillText(d.data.age, c[0], c[1]);\n  });\n});\n\n',
+       parentNode: [Circular],
+       __location: [Object] } ],
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Object], [Object], [Object], [Circular], [Object] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: 
+   { line: 5,
+     col: 1,
+     startOffset: 142,
+     endOffset: 1386,
+     startTag: { line: 5, col: 1, startOffset: 142, endOffset: 150 },
+     endTag: { line: 61, col: 1, startOffset: 1377, endOffset: 1386 } } }
+nodename script
+loc { line: 5,
+  col: 1,
+  startOffset: 142,
+  endOffset: 1386,
+  startTag: { line: 5, col: 1, startOffset: 142, endOffset: 150 },
+  endTag: { line: 61, col: 1, startOffset: 1377, endOffset: 1386 } }
+extracted <script>
+
+var canvas = document.querySelector("canvas"),
+    context = canvas.getContext("2d");
+
+var width = canvas.width,
+    height = canvas.height,
+    radius = Math.min(width, height) / 2;
+
+var colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];
+
+var arc = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(radius - 70)
+    .context(context);
+
+var labelArc = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40)
+    .context(context);
+
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+context.translate(width / 2, height / 2);
+
+d3.requestTsv("data.tsv", function(d) {
+  d.population = +d.population;
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var arcs = pie(data);
+
+  arcs.forEach(function(d, i) {
+    context.beginPath();
+    arc(d);
+    context.fillStyle = colors[i];
+    context.fill();
+  });
+
+  context.beginPath();
+  arcs.forEach(arc);
+  context.strokeStyle = "#fff";
+  context.stroke();
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#000";
+  arcs.forEach(function(d) {
+    var c = labelArc.centroid(d);
+    context.fillText(d.data.age, c[0], c[1]);
+  });
+});
+
+</script>
+iiii 0
+node { nodeName: '#text',
+  value: '\n\nvar canvas = document.querySelector("canvas"),\n    context = canvas.getContext("2d");\n\nvar width = canvas.width,\n    height = canvas.height,\n    radius = Math.min(width, height) / 2;\n\nvar colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];\n\nvar arc = d3.arc()\n    .outerRadius(radius - 10)\n    .innerRadius(radius - 70)\n    .context(context);\n\nvar labelArc = d3.arc()\n    .outerRadius(radius - 40)\n    .innerRadius(radius - 40)\n    .context(context);\n\nvar pie = d3.pie()\n    .sort(null)\n    .value(function(d) { return d.population; });\n\ncontext.translate(width / 2, height / 2);\n\nd3.requestTsv("data.tsv", function(d) {\n  d.population = +d.population;\n  return d;\n}, function(error, data) {\n  if (error) throw error;\n\n  var arcs = pie(data);\n\n  arcs.forEach(function(d, i) {\n    context.beginPath();\n    arc(d);\n    context.fillStyle = colors[i];\n    context.fill();\n  });\n\n  context.beginPath();\n  arcs.forEach(arc);\n  context.strokeStyle = "#fff";\n  context.stroke();\n\n  context.textAlign = "center";\n  context.textBaseline = "middle";\n  context.fillStyle = "#000";\n  arcs.forEach(function(d) {\n    var c = labelArc.centroid(d);\n    context.fillText(d.data.age, c[0], c[1]);\n  });\n});\n\n',
+  parentNode: 
+   { nodeName: 'script',
+     tagName: 'script',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Circular] ],
+     parentNode: 
+      { nodeName: 'body',
+        tagName: 'body',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: 
+      { line: 5,
+        col: 1,
+        startOffset: 142,
+        endOffset: 1386,
+        startTag: [Object],
+        endTag: [Object] } },
+  __location: { line: 5, col: 9, startOffset: 150, endOffset: 1377 } }
+nodename #text
+loc { line: 5, col: 9, startOffset: 150, endOffset: 1377 }
+extracted 
+
+var canvas = document.querySelector("canvas"),
+    context = canvas.getContext("2d");
+
+var width = canvas.width,
+    height = canvas.height,
+    radius = Math.min(width, height) / 2;
+
+var colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];
+
+var arc = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(radius - 70)
+    .context(context);
+
+var labelArc = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40)
+    .context(context);
+
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+context.translate(width / 2, height / 2);
+
+d3.requestTsv("data.tsv", function(d) {
+  d.population = +d.population;
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var arcs = pie(data);
+
+  arcs.forEach(function(d, i) {
+    context.beginPath();
+    arc(d);
+    context.fillStyle = colors[i];
+    context.fill();
+  });
+
+  context.beginPath();
+  arcs.forEach(arc);
+  context.strokeStyle = "#fff";
+  context.stroke();
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#000";
+  arcs.forEach(function(d) {
+    var c = labelArc.centroid(d);
+    context.fillText(d.data.age, c[0], c[1]);
+  });
+});
+
+
+iii 5
+node { nodeName: '#text',
+  value: '\n',
+  parentNode: 
+   { nodeName: 'body',
+     tagName: 'body',
+     attrs: [],
+     namespaceURI: 'http://www.w3.org/1999/xhtml',
+     childNodes: [ [Object], [Object], [Object], [Object], [Object], [Circular] ],
+     parentNode: 
+      { nodeName: 'html',
+        tagName: 'html',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [Object],
+        parentNode: [Object],
+        __location: null },
+     __location: null },
+  __location: { line: 61, col: 10, startOffset: 1386, endOffset: 1387 } }
+nodename #text
+loc { line: 61, col: 10, startOffset: 1386, endOffset: 1387 }
+extracted 
+
+-------

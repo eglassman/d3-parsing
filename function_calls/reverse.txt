@@ -1,1 +1,9 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+data.columns.slice(1).reverse()
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+data.columns.slice(1).reverse()
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+data.columns.slice(1).reverse()
+

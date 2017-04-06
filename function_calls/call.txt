@@ -1,1 +1,21 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".axis")
+      .data(d3.range(angle.domain()[1]))
+    .enter().append("g")
+      .attr("class", "axis")
+      .attr("transform", function(d) { return "rotate(" + angle(d) * 180 / Math.PI + ")"; })
+    .call(d3.svg.axis()
+      .scale(radius.copy().range([-innerRadius, -outerRadius]))
+      .orient("left"))
+

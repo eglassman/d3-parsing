@@ -1,1 +1,15 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.svg.axis()
+    .scale(y)
+    .orient("left")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.svg.axis()
+      .scale(radius.copy().range([-innerRadius, -outerRadius]))
+      .orient("left")
+

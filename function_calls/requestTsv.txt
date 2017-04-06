@@ -1,1 +1,30 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-239.html
+d3.requestTsv("data.tsv", function(d) {
+  d.population = +d.population;
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var arcs = pie(data);
+
+  arcs.forEach(function(d, i) {
+    context.beginPath();
+    arc(d);
+    context.fillStyle = colors[i];
+    context.fill();
+  });
+
+  context.beginPath();
+  arcs.forEach(arc);
+  context.strokeStyle = "#fff";
+  context.stroke();
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#000";
+  arcs.forEach(function(d) {
+    var c = labelArc.centroid(d);
+    context.fillText(d.data.age, c[0], c[1]);
+  });
+})
+

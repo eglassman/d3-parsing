@@ -1,1 +1,6 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.scale.category20c()
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.scale.category20c()
+

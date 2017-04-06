@@ -10,6 +10,13 @@ const options = { locationInfo: true };
 
 
 parseAndPrint('../d3-example-viz/data/htmlfiles/index-239.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-302.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-304.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-458.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-8f1.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-9d5.html')
+parseAndPrint('../d3-example-viz/data/htmlfiles/index-d28.html')
+
 
 function parseAndPrint(filePathAndName) {
   //read in file of interest
@@ -56,12 +63,30 @@ function parseAndPrint(filePathAndName) {
           console.log('- - - -');
           //console.log('check me out!');
           //console.log(node.range);
+
+          var node_str = d3codeAsString.slice(node.range[0],node.range[1]);
+          console.log(node_str)
           try {
-              console.log(node.callee.property.name);
+            var function_name = node.callee.property.name
+            console.log(function_name)
+            fs.appendFile('function_calls/'+function_name+".txt", "#"+ filePathAndName + '\n' + node_str + '\n\n', function (err) {
+              if (err) {
+                // append failed
+              } else {
+                // done
+              }
+            })
           } catch(err){
-              //console.log(err)
+            console.log(err)
+            fs.appendFile('function_calls/no_function_name.txt', "#"+ filePathAndName + '\n' + node_str + '\n\n', function (err) {
+              if (err) {
+                // append failed
+              } else {
+                // done
+              }
+            })
           }
-          console.log(d3codeAsString.slice(node.range[0],node.range[1]))
+          
       }    
   }});
 }

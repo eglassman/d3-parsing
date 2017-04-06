@@ -1,1 +1,6 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+nest.entries(data)
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+nest.entries(data)
+

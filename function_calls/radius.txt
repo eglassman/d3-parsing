@@ -1,1 +1,10 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.svg.line.radial()
+    .interpolate("cardinal-closed")
+    .angle(function(d) { return angle(d.time); })
+    .radius(function(d) { return radius(d.y0 + d.y); })
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+d3.svg.line.radial()
+    .radius(function(d) { return r(d[1]); })
+

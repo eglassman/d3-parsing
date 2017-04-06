@@ -1,1 +1,27 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+d3.arc()
+          .innerRadius(function(d) { return y(d[0]); })
+          .outerRadius(function(d) { return y(d[1]); })
+          .startAngle(function(d) { return x(d.data.State); })
+          .endAngle(function(d) { return x(d.data.State) + x.bandwidth(); })
+          .padAngle(0.01)
+          .padRadius(innerRadius)
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+d3.arc()
+          .innerRadius(function(d) { return y(d[0]); })
+          .outerRadius(function(d) { return y(d[1]); })
+          .startAngle(function(d) { return x(d.data.State); })
+          .endAngle(function(d) { return x(d.data.State) + x.bandwidth(); })
+          .padAngle(0.01)
+          .padRadius(innerRadius)
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+d3.arc()
+          .innerRadius(function(d) { return y(d[0]); })
+          .outerRadius(function(d) { return y(d[1]); })
+          .startAngle(function(d) { return x(d.data.State); })
+          .endAngle(function(d) { return x(d.data.State) + x.bandwidth(); })
+          .padAngle(0.01)
+          .padRadius(innerRadius)
+

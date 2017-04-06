@@ -1,1 +1,5 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-239.html
+d3.pie()
+    .sort(null)
+    .value(function(d) { return d.population; })
+

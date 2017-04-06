@@ -1,1 +1,43 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+x.domain(d3.extent(data, function(d) { return d.date; }))
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })])
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+angle.domain([0, d3.max(data, function(d) { return d.time + 1; })])
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+radius.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })])
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+angle.domain()
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+d3.scale.linear()
+    .domain([0, .5])
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+x.domain(data.map(function(d) { return d.State; }))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+z.domain(data.columns.slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+x.domain(data.map(function(d) { return d.State; }))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+y.domain([0, d3.max(data, function(d) { return d.total; })])
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+z.domain(data.columns.slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+x.domain(data.map(function(d) { return d.State; }))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+y.domain([0, d3.max(data, function(d) { return d.total; })])
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+z.domain(data.columns.slice(1))
+

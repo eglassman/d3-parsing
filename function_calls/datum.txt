@@ -1,1 +1,4 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("path")
+    .datum(data)
+

@@ -1,1 +1,17 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.layout.stack()
+    .offset("zero")
+    .values(function(d) { return d.values; })
+    .x(function(d) { return d.date; })
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.svg.area()
+    .interpolate("cardinal")
+    .x(function(d) { return x(d.date); })
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.layout.stack()
+    .offset("zero")
+    .values(function(d) { return d.values; })
+    .x(function(d) { return d.time; })
+

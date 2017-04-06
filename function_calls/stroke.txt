@@ -1,1 +1,3 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-239.html
+context.stroke()
+

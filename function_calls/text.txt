@@ -1,1 +1,131 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".axis")
+      .data(d3.range(angle.domain()[1]))
+    .enter().append("g")
+      .attr("class", "axis")
+      .attr("transform", function(d) { return "rotate(" + angle(d) * 180 / Math.PI + ")"; })
+    .call(d3.svg.axis()
+      .scale(radius.copy().range([-innerRadius, -outerRadius]))
+      .orient("left"))
+    .append("text")
+      .attr("y", -innerRadius + 6)
+      .attr("dy", ".71em")
+      .attr("text-anchor", "middle")
+      .text(function(d) { return formatDay(d); })
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+gr.append("text")
+    .attr("y", function(d) { return -r(d) - 4; })
+    .attr("transform", "rotate(15)")
+    .style("text-anchor", "middle")
+    .text(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+ga.append("text")
+    .attr("x", radius + 6)
+    .attr("dy", ".35em")
+    .style("text-anchor", function(d) { return d < 270 && d > 90 ? "end" : null; })
+    .attr("transform", function(d) { return d < 270 && d > 90 ? "rotate(180 " + (radius + 6) + ",0)" : null; })
+    .text(function(d) { return d + "°"; })
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+label.append("text")
+      .attr("transform", function(d) { return (x(d.State) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI ? "rotate(90)translate(0,16)" : "rotate(-90)translate(0,-9)"; })
+      .text(function(d) { return d.State; })
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yTick.append("text")
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .attr("fill", "none")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 5)
+      .attr("stroke-linejoin", "round")
+      .text(y.tickFormat(5, "%"))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yTick.append("text")
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .text(y.tickFormat(5, "%"))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+legend.append("text")
+      .attr("x", 24)
+      .attr("y", 9)
+      .attr("dy", "0.35em")
+      .text(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+label.append("text")
+      .attr("transform", function(d) { return (x(d.State) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI ? "rotate(90)translate(0,16)" : "rotate(-90)translate(0,-9)"; })
+      .text(function(d) { return d.State; })
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yTick.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .attr("fill", "none")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 5)
+      .text(y.tickFormat(10, "s"))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yTick.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .text(y.tickFormat(10, "s"))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yAxis.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(y.ticks(10).pop()); })
+      .attr("dy", "-1em")
+      .text("Population")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+legend.append("text")
+      .attr("x", 24)
+      .attr("y", 9)
+      .attr("dy", "0.35em")
+      .text(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+label.append("text")
+      .attr("transform", function(d) { return (x(d.State) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI ? "rotate(90)translate(0,16)" : "rotate(-90)translate(0,-9)"; })
+      .text(function(d) { return d.State; })
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yTick.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .attr("fill", "none")
+      .attr("stroke", "#fff")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-width", 3)
+      .text(y.tickFormat(10, "s"))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yTick.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(d); })
+      .attr("dy", "0.35em")
+      .text(y.tickFormat(10, "s"))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yAxis.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return -y(y.ticks(10).pop()); })
+      .attr("dy", "-1em")
+      .text("Population")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+legend.append("text")
+      .attr("x", 24)
+      .attr("y", 9)
+      .attr("dy", "0.35em")
+      .text(function(d) { return d; })
+

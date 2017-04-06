@@ -1,1 +1,15 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.layout.stack()
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.layout.stack()
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+d3.stack()
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+d3.stack()
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+d3.stack()
+

@@ -1,1 +1,15 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-239.html
+Math.min(width, height)
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+Math.min(width, height)
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+Math.min(width, height)
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+Math.min(width, height)
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+Math.min(width, height)
+

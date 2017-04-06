@@ -1,1 +1,8 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.nest()
+    .key(function(d) { return d.key; })
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.nest()
+    .key(function(d) { return d.key; })
+

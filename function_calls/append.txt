@@ -1,1 +1,316 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.select("body").append("svg")
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.selectAll(".layer")
+      .data(layers)
+    .enter().append("path")
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+d3.select("body").append("svg")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".layer")
+      .data(layers)
+    .enter().append("path")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".axis")
+      .data(d3.range(angle.domain()[1]))
+    .enter().append("g")
+      .attr("class", "axis")
+      .attr("transform", function(d) { return "rotate(" + angle(d) * 180 / Math.PI + ")"; })
+    .call(d3.svg.axis()
+      .scale(radius.copy().range([-innerRadius, -outerRadius]))
+      .orient("left"))
+    .append("text")
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".axis")
+      .data(d3.range(angle.domain()[1]))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+d3.select("body").append("svg")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+    .attr("class", "r axis")
+  .selectAll("g")
+    .data(r.ticks(5).slice(1))
+  .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+gr.append("circle")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+gr.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+    .attr("class", "a axis")
+  .selectAll("g")
+    .data(d3.range(0, 360, 30))
+  .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+ga.append("line")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+ga.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("path")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack()
+        .keys(data.columns.slice(1))
+        .offset(d3.stackOffsetExpand)
+        (data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+    .enter().append("path")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack()
+        .keys(data.columns.slice(1))
+        .offset(d3.stackOffsetExpand)
+        (data))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+label.append("line")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+label.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(5).slice(1))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yTick.append("circle")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+legend.append("rect")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+legend.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+    .enter().append("path")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+label.append("line")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+label.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(10).slice(1))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yTick.append("circle")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yAxis.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+legend.append("rect")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+legend.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+svg.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+    .enter().append("path")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+label.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+label.append("line")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(10).slice(1))
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yTick.append("circle")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yTick.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yAxis.append("text")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+    .enter().append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+legend.append("rect")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+legend.append("text")
+

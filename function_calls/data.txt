@@ -1,1 +1,117 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.selectAll(".layer")
+      .data(layers)
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".layer")
+      .data(layers)
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".axis")
+      .data(d3.range(angle.domain()[1]))
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+    .attr("class", "r axis")
+  .selectAll("g")
+    .data(r.ticks(5).slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+svg.append("g")
+    .attr("class", "a axis")
+  .selectAll("g")
+    .data(d3.range(0, 360, 30))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack()
+        .keys(data.columns.slice(1))
+        .offset(d3.stackOffsetExpand)
+        (data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack()
+        .keys(data.columns.slice(1))
+        .offset(d3.stackOffsetExpand)
+        (data))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(5).slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(10).slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("path")
+    .data(function(d) { return d; })
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(data.columns.slice(1))(data))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(data)
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+yAxis
+    .selectAll("g")
+    .data(y.ticks(10).slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+g.append("g")
+    .selectAll("g")
+    .data(data.columns.slice(1).reverse())
+

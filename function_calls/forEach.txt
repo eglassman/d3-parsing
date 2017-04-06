@@ -1,1 +1,23 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-239.html
+arcs.forEach(function(d, i) {
+    context.beginPath();
+    arc(d);
+    context.fillStyle = colors[i];
+    context.fill();
+  })
+
+#../d3-example-viz/data/htmlfiles/index-239.html
+arcs.forEach(arc)
+
+#../d3-example-viz/data/htmlfiles/index-239.html
+arcs.forEach(function(d) {
+    var c = labelArc.centroid(d);
+    context.fillText(d.data.age, c[0], c[1]);
+  })
+
+#../d3-example-viz/data/htmlfiles/index-302.html
+data.forEach(function(d) {
+    d.date = format.parse(d.date);
+    d.value = +d.value;
+  })
+

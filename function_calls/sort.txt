@@ -1,1 +1,13 @@
+#../d3-example-viz/data/htmlfiles/index-239.html
+d3.pie()
+    .sort(null)
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+data.sort(function(a, b) { return b[data.columns[1]] / b.total - a[data.columns[1]] / a.total; })
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+data.sort(function(a, b) { return b[data.columns[6]] -  a[data.columns[6]]; })
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
 array.sort(compare)
+

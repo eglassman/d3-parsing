@@ -1,1 +1,14 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-458.html
+d3.range(0, 2 * Math.PI, .01).map(function(t) {
+  return [t, Math.sin(2 * t) * Math.cos(2 * t)];
+})
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+data.map(function(d) { return d.State; })
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+data.map(function(d) { return d.State; })
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+data.map(function(d) { return d.State; })
+

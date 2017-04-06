@@ -1,1 +1,10 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+d3.stack()
+        .keys(data.columns.slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+d3.stack().keys(data.columns.slice(1))
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+d3.stack().keys(data.columns.slice(1))
+

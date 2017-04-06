@@ -1,1 +1,24 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(d3.time.days)
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+r.ticks(5)
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+y.ticks(5)
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+y.ticks(10)
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+y.ticks(10)
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+y.ticks(10)
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+y.ticks(10)
+

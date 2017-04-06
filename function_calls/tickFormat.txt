@@ -1,1 +1,18 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+y.tickFormat(5, "%")
+
+#../d3-example-viz/data/htmlfiles/index-8f1.html
+y.tickFormat(5, "%")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+y.tickFormat(10, "s")
+
+#../d3-example-viz/data/htmlfiles/index-9d5.html
+y.tickFormat(10, "s")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+y.tickFormat(10, "s")
+
+#../d3-example-viz/data/htmlfiles/index-d28.html
+y.tickFormat(10, "s")
+

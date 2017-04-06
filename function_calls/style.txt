@@ -1,1 +1,28 @@
-array.sort(compare)
+#../d3-example-viz/data/htmlfiles/index-302.html
+svg.selectAll(".layer")
+      .data(layers)
+    .enter().append("path")
+      .attr("class", "layer")
+      .attr("d", function(d) { return area(d.values); })
+      .style("fill", function(d, i) { return z(i); })
+
+#../d3-example-viz/data/htmlfiles/index-304.html
+svg.selectAll(".layer")
+      .data(layers)
+    .enter().append("path")
+      .attr("class", "layer")
+      .attr("d", function(d) { return area(d.values); })
+      .style("fill", function(d, i) { return z(i); })
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+gr.append("text")
+    .attr("y", function(d) { return -r(d) - 4; })
+    .attr("transform", "rotate(15)")
+    .style("text-anchor", "middle")
+
+#../d3-example-viz/data/htmlfiles/index-458.html
+ga.append("text")
+    .attr("x", radius + 6)
+    .attr("dy", ".35em")
+    .style("text-anchor", function(d) { return d < 270 && d > 90 ? "end" : null; })
+

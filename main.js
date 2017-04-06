@@ -1,61 +1,113 @@
 //npm module dependences
 const fs = require('fs');
+const path = require('path');
 const esprima = require('esprima');
 const traverse = require("ast-traverse");
-const htmlparser = require("htmlparser");
-const sys = require("util");
 const utils = require('parse5-utils');
 const parse5 = require('parse5');
+const escodegen = require('escodegen');
 const options = { locationInfo: true };
 
-//read in file of interest
-//var d3index = fs.readFileSync('../d3-example-viz/data/htmlfiles/index-239.html','utf8')
-var d3index = fs.readFileSync('test-index.html','utf8');
-console.log(d3index)
+var input_folder_loc = "Samples/";
+var output_file_loc = "output.js";
+var FUNCTION_NAMES = [process.argv[2]];
+var INCLUDE_FUNCTION_NAME = (process.argv[3].toLowerCase() == 'true');
+var HIDE_INNER_FUNCTIONS = (process.argv[4].toLowerCase() == 'true');
+var output = "";
 
-//parse the html
-var parsedd3index = parse5.parse(d3index,options);
-
-var parsedd3index_flattened = utils.flatten(parsedd3index);
-
-for (var i in parsedd3index_flattened) {
-  console.log('-------');
-  //console.log(parsedd3index_flattened[i].nodeName);
-  // console.log(parsedd3index_flattened[i]['__location']); //.startOffset,parsedd3index_flattened[i].nodeName['__location'].endOffset));
-  var loc = parsedd3index_flattened[i]['__location'];
-  // if (loc) {
-  //   console.log(d3index.slice(loc.startOffset,loc.endOffset));
-  // }
-  if (parsedd3index_flattened[i].nodeName==='script') {
-    if (loc.startTag.endOffset === loc.endTag.startOffset){
-        //then this script tag has no textcontents; print the whole thing
-        console.log('no contents',d3index.slice(loc.startOffset,loc.endOffset));
-    } else {
-        var scriptContents = d3index.slice(loc.startTag.endOffset,loc.endTag.startOffset);
-        console.log('scriptContents',scriptContents);
-    }
-    
-  }
-  console.log('-------');
+function NodeWrapper (node, parent) {
+	this.node = node;
+	this.parent = parent;
 }
 
-var d3codeAsString = scriptContents;// 'var arc = d3.arc().outerRadius(radius - 10).innerRadius(radius - 70).context(context); var labelArc = d3.arc().outerRadius(radius - 40).innerRadius(radius - 40).context(context);';
+function is_valid_semantic_tag(tag) {
+	for (var i = 0; i < FUNCTION_NAMES.length; i++) {
+		if (FUNCTION_NAMES[i].toLowerCase() == tag.toLowerCase()) {
+			return true;
+		}
+	}
+	return false;
+}
 
-var parsedd3 = esprima.parse(d3codeAsString, { range: true, loc: true });
+function process_file(file_loc) {
+	var result = "";
+	//read in file of interest
+	var html_content = fs.readFileSync(file_loc, 'utf8');
+	//parse the html
+	var parsed_html = parse5.parse(html_content, options);
+	var parsed_html_flattened = utils.flatten(parsed_html);
 
-console.log('traversing parsedd3')
+	for (var i in parsed_html_flattened) {
+		var tag = parsed_html_flattened[i];
+		var loc = tag['__location'];
+		if (tag.nodeName == 'script') {
+			if (loc.startTag.endOffset == loc.endTag.startOffset){
+				//then this script tag has no textcontents; print the whole thing
+				//console.log('no contents', html_content.slice(loc.startOffset, loc.endOffset));
+			} else {
+				var js_content = html_content.slice(loc.startTag.endOffset, loc.endTag.startOffset);
+			}
+		}
+	}
 
-traverse(parsedd3, {pre: function(node, parent, prop, idx) {
-    //console.log(node.type + (parent ? " from parent " + parent.type + " via " + prop + (idx !== undefined ? "[" + idx + "]" : "") : ""));
-    if (node.type == "CallExpression"){
-        console.log('- - - -');
-        //console.log('check me out!');
-        console.log(node.range);
-        try {
-            console.log(node.callee.property.name);
-        } catch(err){
-            //console.log(err)
-        }
-        console.log(d3codeAsString.slice(node.range[0],node.range[1]))
-    }    
-}});
+	var parsed_d3 = esprima.parse(js_content, { range: true, loc: true });
+
+	traverse(parsed_d3, {pre: function(node, parent, prop, idx) {
+
+		if (node.type != "CallExpression") {
+			return;
+		}
+		if (node.callee.property === undefined) {
+			return;
+		}
+		if (node.callee.object.name != "d3") {
+			return;
+		}
+		semantic_tag = node.callee.property.name;
+		if (!is_valid_semantic_tag(semantic_tag)) {
+			return;
+		}
+		start = node.range[0];
+		end = node.range[1];
+		if (parent.type == "MemberExpression") {
+			//start = Math.min(start, parent.range[0]);
+			//end = Math.max(end, parent.range[1]);
+		}
+		raw = js_content.slice(start, end);
+		if (HIDE_INNER_FUNCTIONS) {
+			for (var i = node.arguments.length - 1; i >= 0; i--) {
+				argument = node.arguments[i];
+				if (argument.type != "FunctionExpression") {
+					continue;
+				}
+				r = argument.body.range;
+				raw = raw.slice(0, r[0] - start) + "{...}" + raw.slice(r[1] - start);
+			}
+		}
+		result += raw.trim() + "\n";
+	}});
+	return result;
+}
+
+var tags = JSON.parse(fs.readFileSync('tags.json', 'utf8'));
+if (tags.hasOwnProperty(FUNCTION_NAMES[0])) {
+	FUNCTION_NAMES = tags[FUNCTION_NAMES[0]];
+}
+
+var samples = fs.readdirSync(input_folder_loc).filter(file => fs.statSync(path.join(input_folder_loc, file)).isDirectory());
+
+samples.forEach(function(sample_folder) {
+	sample_loc = input_folder_loc + sample_folder + '/index.html';
+	result = process_file(sample_loc);
+	if (result.length > 0) {
+		output += "# File: " + sample_folder + "\n";
+		output += result;
+	}
+});
+
+fs.writeFile(output_file_loc, output, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    console.log("The file was saved at " + output_file_loc + "!");
+});

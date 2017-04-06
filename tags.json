@@ -1,0 +1,5 @@
+{
+"Statistics": ["min", "max", "extent", "sum", "mean", "median", "quantile", "variance", "deviation"],
+"Axes": ["axisTop", "axisRight", "axisBottom", "axisLeft"],
+"Requests": ["request", "csv", "html", "json", "text", "tsv", "xml"]
+}

@@ -1,0 +1,18 @@
+d3.range(angle.domain()[1])
+d3.range(0, 2 * Math.PI, .01)
+d3.range(0, 360, 30)
+
+d3.time.scale().range([0, width])
+d3.time.scale().range([0, 2 * Math.PI])
+
+d3.scale.linear().range([height, 0])
+d3.scale.linear().range([innerRadius, outerRadius])
+d3.scale.linear().domain([0, .5]).range([0, radius])
+
+radius.copy().range([-innerRadius, -outerRadius])
+
+[3] d3.scaleBand().range([0, 2 * Math.PI])
+
+[3] d3.scaleRadial().range([innerRadius, outerRadius])
+
+[3] d3.scaleOrdinal().range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])

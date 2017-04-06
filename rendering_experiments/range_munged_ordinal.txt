@@ -1,0 +1,17 @@
+.range([0, width])
+.range([height, 0])
+
+.range([0, radius])
+.range(0, 360, 30)
+
+.range(angle.domain()[1])
+
+.range([0, 2 * Math.PI])
+.range(0, 2 * Math.PI, .01)
+
+.range([innerRadius, outerRadius])
+.range([-innerRadius, -outerRadius])
+
+[3] .range([0, 2 * Math.PI])
+[3] .range([innerRadius, outerRadius])
+[3] .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])

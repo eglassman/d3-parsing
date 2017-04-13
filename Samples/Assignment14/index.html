@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="./src/radar-chart.css">
+<!-- This code is modified from the bcourses radar-chart https://github.com/alangrafu/radar-chart-d3 -->
+<head>
+  <style>
+    body {
+      background-color: black;/* I modified this from default white color*/
+      padding: 20px;
+      color:#b2b2b2;/* I modified this text color from default black color*/
+    }
+    .radar-chart .area {
+      fill-opacity: 0.2;/* I modified this according to the black background color*/
+    }
+    .radar-chart.focus .area {
+      fill-opacity: 0.2;/* I modified this according to the black background color from 0.3*/
+    }
+    .radar-chart.focus .area.focused {
+      fill-opacity: 0.7; /* I modified this according to the black background color from 0.9*/
+    }
+    .area.germany, .germany .circle {
+      fill: #FFD700;
+      stroke: none;
+    }
+    .area.argentina, .argentina .circle {
+      fill: #ADD8E6;
+      stroke: none;
+    }
+
+/* I modified the following 3 attributes */
+    .axis text {
+      fill: #b2b2b2;
+      stroke: none;
+      margin: -25px;
+      font-size: 8px !important;
+    }
+
+    text.legend.left {
+      transform: translateY(-7px);
+    }
+
+    text.legend.right {
+      transform: translateY(-7px);
+    }
+
+    text.legend.middle {
+      transform: translateY(-2px);
+    }
+
+
+  </style>
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+  <script type="text/javascript" src="./src/radar-chart.js"></script>
+  <script type="text/javascript" src="d3.parcoords.js"></script>
+
+
+  </head>
+  <body>
+    <h1 style="margin-left: 55px">Average Scores for Universities in Top-6 Countries</h1>
+    <h3 style="margin-left: 55px">(Countries with the Largest Numbers of Universities, All Scores on the Scale of 0 - 100)</h3>
+    <p><br/></p>
+
+<!--     <p>Include data in CSV format. The <strong>first row are the headers</strong> and the <strong>first column is the class names.</strong></p> -->
+
+<!-- I modified the following 3 inline datasets -->
+<textarea style="display:none;" id="data" cols="60" rows="15">Country,Teaching,International,Research,Citations,Total Score
+Germany,49.1,56.5,42.3,65.0,52.5
+United Kingdom,51.1,74.6,52.9,72.5,59.5
+Australia,49.7,84.4,53.3,71.4,59.8
+Canada,52.4,69.5,60.7,65.5,59.8
+Japan,70.3,20.4,71.8,46.2,60.5
+United States of America,61.5,42.2,61.9,79.3,66.4</textarea>
+
+<textarea style="display:none;" id="data2013" cols="60" rows="15">Country,Teaching,International,Research,Citations,Total Score
+Germany,40.3,53.7,32.0,67.0,55.8
+United Kingdom,39.9,76.5,41.0,69.4,60.1
+Australia,35.0,75.8,40.9,53.8,62.1
+Canada,40.4,60.0,44.7,61.3,63.1
+Japan,49.3,26.0,41.6,50.7,60.8
+United States of America,51.1,38.2,48.2,76.4,65.6</textarea>
+
+<textarea style="display:none;" id="data2015" cols="60" rows="15">Country,Teaching,International,Research,Citations,Total Score
+Germany,36.7,54.8,30.8,68.1,54.9
+United Kingdom,37.5,79.2,38.3,73.9,58.9
+Australia,32.3,78.7,36.6,59.2,58.7
+Canada,39.0,65.9,41.2,64.8,59.5
+Japan,45.0,31.7,38.3,55.3,57.4
+United States of America,47.1,44.5,44.0,77.4,62.9</textarea>
+
+<p>
+<!-- Width: <input type="number" name="w" id="w" class="form-control" value="600" min="200" max="2000" step="" required="required" title="">
+Height: <input type="number" name="h" id="h" class="form-control" value="600" min="200" max="2000" step="" required="required" title=""> -->
+
+ <!--      <form>
+        <h3>Configuration Parameters</h3>
+        <div class="form-group">
+          <label>Width:</label>
+          <input type="number" class="form-control-inline" step="50" ng-model="RadarChart.config.w" />
+          <label>Height:</label>
+          <input type="number" class="form-control-inline" step="50" ng-model="RadarChart.config.h" />
+        </div>
+        <div class="form-group">
+          <label>Levels:</label>
+          <input type="number" class="form-control-inline" step="1" ng-model="RadarChart.config.levels" />
+        </div>
+        <div class="form-group">
+          <label>Padding Scale:</label>
+          <input type="number" class="form-control-inline" step="0.1" ng-model="RadarChart.config.facetPaddingScale" />
+        </div>
+        <div class="form-group">
+          <label>Label Scale:</label>
+          <input type="number" class="form-control-inline" step="0.1" ng-model="RadarChart.config.labelScale" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.facet" /><span class="text-primary">Facet Plot</span></label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showLevels" />Levels</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showAxes" />Axes</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showVertices" />Vertices</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showPolygons" />Polygons</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showLegend" />Legend</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showLevelsLabels" />Levels Labels</label>
+          <label class="checkbox"><input type="checkbox" ng-model="RadarChart.config.showAxesLabels" />Axes Labels</label>
+        </div>
+        <p class="text-muted">(NOTE: Not all configuration options are shown, refer to <code>README.md</code> or <code>radarDraw.js</code> for more details)</p>
+      </form> -->
+</p>
+<p>
+<!-- <button onclick='showRadar()' class="btn btn-default" style="width:200px;height:50px;">Draw!</button>
+ --></p>
+
+<script type="text/javascript">
+
+  function showRadar(){
+    var data = [];
+    var chart = RadarChart.chart();
+  
+  var c = document.getElementById("data").value,
+      w = 300 //document.getElementById("w").value,
+      h = 300 //document.getElementById("h").value,
+  csv = c.split("\n").map(function(i){return i.split(",")})
+  headers = []
+  csv.forEach(function(item, i){
+    if(i==0){
+      headers = item;
+    }else{
+      newSeries = {};
+      item.forEach( function(v, j){
+        if(j==0){
+          newSeries.className = v;
+          newSeries.axes = [];
+        }else{
+          newSeries.axes.push({"axis":[headers[j]], "value": parseFloat(v)});
+        }
+      });
+      data.push(newSeries);
+    }
+  })
+RadarChart.defaultConfig.radius = 3;
+RadarChart.defaultConfig.w = w;
+RadarChart.defaultConfig.h = h;
+
+RadarChart.draw("#chart-container", data);
+function animate(elem,time) {
+    if( !elem) return;
+    var to = elem.offsetTop;
+    var from = window.scrollY;
+    var start = new Date().getTime(),
+        timer = setInterval(function() {
+            var step = Math.min(1,(new Date().getTime()-start)/time);
+            window.scrollTo(0,(from+step*(to-from))+1);
+            if( step == 1){ clearInterval(timer);};
+        },25);
+        window.scrollTo(0,(from+1));
+    }
+
+var divVal = document.getElementById('chart-container');
+animate(divVal,600);
+}
+
+// function buildLevelsLabels() {
+//   for (var level = 0; level < defaultConfig.levels; level++) {
+//     var levelFactor = vis.radius * ((level + 1) / defaultConfig.levels);
+
+//         // build level-labels
+//         vis.levels
+//            .data([1]).enter()
+//            .append("svg:text").classed("level-labels", true)
+//            .text((defaultConfig.maxValue * (level + 1) / defaultConfig.levels).toFixed(2))
+//            .attr("x", function(d) { return levelFactor * (1 - Math.sin(0)); })
+//            .attr("y", function(d) { return levelFactor * (1 - Math.cos(0)); })
+//            .attr("transform", "translate(" + (defaultConfig.w / 2 - levelFactor + 5) + ", " + (defaultConfig.h / 2 - levelFactor) + ")")
+//            .attr("fill", "gray")
+//            .attr("font-family", "sans-serif")
+//            .attr("font-size", 10 * defaultConfig.labelScale + "px");
+//       }
+//     }
+
+
+
+// I modified the following 3 showRadar functions to show three radar charts for aggregated data for the three years 
+function showRadar2013(){
+    var data = [];
+    var chart = RadarChart.chart();
+  
+  var c = document.getElementById("data2013").value,
+      w = 300 //document.getElementById("w").value,
+      h = 300 //document.getElementById("h").value,
+  csv = c.split("\n").map(function(i){return i.split(",")})
+  headers = []
+  csv.forEach(function(item, i){
+    if(i==0){
+      headers = item;
+    }else{
+      newSeries = {};
+      item.forEach( function(v, j){
+        if(j==0){
+          newSeries.className = v;
+          newSeries.axes = [];
+        }else{
+          newSeries.axes.push({"axis":[headers[j]], "value": parseFloat(v)});
+        }
+      });
+      data.push(newSeries);
+    }
+  })
+RadarChart.defaultConfig.radius = 3;
+RadarChart.defaultConfig.w = w;
+RadarChart.defaultConfig.h = h;
+
+RadarChart.draw("#chart-container2013", data);
+function animate(elem,time) {
+    if( !elem) return;
+    var to = elem.offsetTop;
+    var from = window.scrollY;
+    var start = new Date().getTime(),
+        timer = setInterval(function() {
+            var step = Math.min(1,(new Date().getTime()-start)/time);
+            window.scrollTo(0,(from+step*(to-from))+1);
+            if( step == 1){ clearInterval(timer);};
+        },25);
+        window.scrollTo(0,(from+1));
+    }
+
+var divVal = document.getElementById('chart-container2013');
+animate(divVal,600);
+}
+
+function showRadar2015(){
+    var data = [];
+    var chart = RadarChart.chart();
+  
+  var c = document.getElementById("data2015").value,
+      w = 300 //document.getElementById("w").value,
+      h = 300 //document.getElementById("h").value,
+  csv = c.split("\n").map(function(i){return i.split(",")})
+  headers = []
+  csv.forEach(function(item, i){
+    if(i==0){
+      headers = item;
+    }else{
+      newSeries = {};
+      item.forEach( function(v, j){
+        if(j==0){
+          newSeries.className = v;
+          newSeries.axes = [];
+        }else{
+          newSeries.axes.push({"axis":[headers[j]], "value": parseFloat(v)});
+        }
+      });
+      data.push(newSeries);
+    }
+  })
+RadarChart.defaultConfig.radius = 3;
+RadarChart.defaultConfig.w = w;
+RadarChart.defaultConfig.h = h;
+
+RadarChart.draw("#chart-container2015", data);
+function animate(elem,time) {
+    if( !elem) return;
+    var to = elem.offsetTop;
+    var from = window.scrollY;
+    var start = new Date().getTime(),
+        timer = setInterval(function() {
+            var step = Math.min(1,(new Date().getTime()-start)/time);
+            window.scrollTo(0,(from+step*(to-from))+1);
+            if( step == 1){ clearInterval(timer);};
+        },25);
+        window.scrollTo(0,(from+1));
+    }
+
+var divVal = document.getElementById('chart-container2015');
+animate(divVal,600);
+}
+
+
+d3.select("#table1").selectAll("tr").on({"mouseover": function(d) {RadarChart.chart()("#chart-container").highlight([d])},
+  "mouseout": RadarChart.chart()("#chart-container").unhighlight
+}); 
+
+
+
+</script>
+
+<!-- I modified the following 3 chart-container code to show 3 inline-block container-->
+<div style="display: inline-block;"><div id="chart-container" style="display: inline-block; margin-left:auto; margin-right:auto"></div><div style="color: #b2b2b2; text-align: center; font-size: 14px;">Year 2011</div></div>
+
+<div style="display: inline-block;"><div id="chart-container2013" style="display: inline-block; margin-left:auto; margin-right:auto"></div><div style="color: #b2b2b2; text-align: center; font-size: 14px;">Year 2013</div></div>
+
+<div style="display: inline-block;"><div id="chart-container2015" style="display: inline-block; margin-left:auto; margin-right:auto"></div><div style="color: #b2b2b2; text-align: center; font-size: 14px;">Year 2015</div></div>
+
+
+<script type="text/javascript">
+ // I modified the following scripts to draw three charts
+    RadarChart.defaultConfig.showLevelsLabels = true;
+    RadarChart.defaultConfig.showLegend = true;
+    showRadar();
+    showRadar2013();
+    showRadar2015();
+
+  </script>
+<p><br/><br/></p>
+<!-- I added this table to show more details of the dataset, along with the 3 charts -->
+<table style="width:900px; font-size:10px">
+  <tr>
+    <td>Year</td>
+    <td>Country</td>
+    <td>Avg. Teaching Score</td>    
+    <td>Avg. International Score</td>
+    <td>Avg. Research Score</td>
+    <td>Avg. Citation Score</td>
+    <td>Avg. Total Score</td>
+
+  </tr>
+  <tr>
+    <td>2011</td>
+    <td>United States of America</td>
+    <td>61.5</td>    
+    <td>42.2</td>
+    <td>61.9</td>
+    <td>79.3</td>
+    <td>66.4</td>
+  </tr>
+  <tr>
+    <td>2011</td>
+    <td>United Kingdom</td>
+    <td>51.1</td>    
+    <td>74.6</td>
+    <td>52.9</td>
+    <td>72.5</td>
+    <td>59.5</td>
+  </tr>
+    <tr>
+    <td>2011</td>
+    <td>Germany</td>
+    <td>49.1</td>    
+    <td>56.5</td>
+    <td>42.3</td>
+    <td>65.0</td>
+    <td>52.5</td>
+  </tr>
+    <tr>
+    <td>2011</td>
+    <td>Australia</td>
+    <td>49.7</td>    
+    <td>84.4</td>
+    <td>53.3</td>
+    <td>71.4</td>
+    <td>59.8</td>
+  </tr>
+  <tr>
+    <td>2011</td>
+    <td>Canada</td>
+    <td>52.4</td>    
+    <td>69.5</td>
+    <td>60.7</td>
+    <td>65.5</td>
+    <td>59.8</td>
+  </tr>
+  <tr>
+    <td>2011</td>
+    <td>Japan</td>
+    <td>70.3</td>    
+    <td>20.4</td>
+    <td>71.8</td>
+    <td>46.2</td>
+    <td>60.5</td>
+  </tr>
+  <tr>
+        <td>-</td>
+  </tr>
+  <tr>
+    <td>2013</td>
+    <td>United States of America</td>
+    <td>51.1</td>    
+    <td>38.2</td>
+    <td>48.2</td>
+    <td>76.4</td>
+    <td>65.6</td>
+  </tr>
+  <tr>
+    <td>2013</td>
+    <td>United Kingdom</td>
+    <td>39.9</td>    
+    <td>76.5</td>
+    <td>41.0</td>
+    <td>69.4</td>
+    <td>60.1</td>
+  </tr>
+  <tr>
+    <td>2013</td>
+    <td>Germany</td>
+    <td>40.3</td>    
+    <td>53.7</td>
+    <td>32.0</td>
+    <td>67.0</td>
+    <td>55.8</td>
+  </tr>
+
+  <tr>
+    <td>2013</td>
+    <td>Australia</td>
+    <td>35.0</td>    
+    <td>75.8</td>
+    <td>40.9</td>
+    <td>53.8</td>
+    <td>62.1</td>
+  </tr>
+    <tr>
+    <td>2013</td>
+    <td>Canada</td>
+    <td>40.4</td>    
+    <td>60.0</td>
+    <td>44.7</td>
+    <td>61.3</td>
+    <td>63.1</td>
+  </tr>
+    <tr>
+    <td>2013</td>
+    <td>Japan</td>
+    <td>49.3</td>    
+    <td>26.0</td>
+    <td>41.6</td>
+    <td>50.7</td>
+    <td>60.8</td>
+  </tr>
+  <tr>
+        <td>-</td>
+  </tr>
+  <tr>
+    <td>2015</td>
+    <td>United States of America</td>
+    <td>47.1</td>    
+    <td>44.5</td>
+    <td>44.0</td>
+    <td>77.4</td>
+    <td>62.9</td>
+  </tr>
+    <tr>
+    <td>2015</td>
+    <td>United Kingdom</td>
+    <td>37.5</td>    
+    <td>79.2</td>
+    <td>38.3</td>
+    <td>73.9</td>
+    <td>58.9</td>
+  </tr>
+      <tr>
+    <td>2015</td>
+    <td>Germany</td>
+    <td>36.7</td>    
+    <td>54.8</td>
+    <td>30.8</td>
+    <td>68.1</td>
+    <td>54.9</td>
+  </tr>
+
+      <tr>
+    <td>2015</td>
+    <td>Australia</td>
+    <td>32.3</td>    
+    <td>78.7</td>
+    <td>36.6</td>
+    <td>59.2</td>
+    <td>58.7</td>
+  </tr>
+      <tr>
+    <td>2015</td>
+    <td>Canada</td>
+    <td>39.0</td>    
+    <td>65.9</td>
+    <td>41.2</td>
+    <td>64.8</td>
+    <td>59.5</td>
+  </tr>
+      <tr>
+    <td>2015</td>
+    <td>Japan</td>
+    <td>45.0</td>    
+    <td>31.7</td>
+    <td>38.3</td>
+    <td>55.3</td>
+    <td>57.4</td>
+  </tr>
+</table>
+<p style="font-size:10px;"><br/>To view a parallel chart of a subset of this data, go <a style="color: pink"; href="./index.html">here</a>.</p>
+
+</body>
+</html>

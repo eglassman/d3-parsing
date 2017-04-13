@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+<body>
+<h3 align="center">Time University ranking</h3>
+<h4 align="center">(top 30 universities)</h4>
+
+<!-- </header> -->
+<div id="selection">
+&nbsp;&nbsp;&nbsp;Select year:
+<select name ="year" onchange="yearSelector()" id="year">
+  <option value="2016">2016</option>
+  <option value="2015">2015</option>
+  <option value="2014">2014</option>
+  <option value="2013">2013</option>
+  <option value="2013">2012</option>
+  <option value="2013">2011</option>
+</select>
+</div>
+
+
+<div id = "pc"></div>
+<div id = "key">
+	<h2>Key</h2>
+	<div class="cblock" id="us"></div><span>USA</span><br>
+	<div class="cblock" id="uk"></div><span>UK</span><br>
+	<div class="cblock" id="sz"></div><span>Switzerland</span><br>
+	<div class="cblock" id="ca"></div><span>Canada</span><br>
+	<div class="cblock" id="sg"></div><span>Singapore</span><br>
+	<div class="cblock" id="sw"></div><span>Sweden</span><br>
+	<div class="cblock" id="gm"></div><span>Germany</span><br>
+	<div class="cblock" id="jp"></div><span>Japan</span><br>
+	<div class="cblock" id="au"></div><span>Australia</span><br>
+	<div class="cblock" id="sk"></div><span>South Korea</span><br>
+	<div class="cblock" id="hk"></div><span>Hong Kong</span>
+</div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="js/parallel.js"></script>
+<a class="button button-primary" href="index.html">Back to Home</a><br><br>
+</body>
+
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="css/radar-chart.css">
+<link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+<head>
+  <style>
+    body {
+      padding: 20px;
+    }
+    .radar-chart .area {
+      fill-opacity: 0.7;
+    }
+    .radar-chart.focus .area {
+      fill-opacity: 0.3;
+    }
+    .radar-chart.focus .area.focused {
+      fill-opacity: 0.9;
+    }
+    .area.United, .United .circle {
+      fill: #cb647b;
+      stroke: none;
+    }
+    .area.China, .China .circle {
+      fill: #64cb82;
+      stroke: none;
+    }
+    .area.Israel, .Israel .circle {
+      fill: #4e82c4;
+      stroke: none;
+    }
+
+  </style>
+
+
+
+
+  <script type="text/javascript" src="//d3js.org/d3.v3.js"></script>
+  <script type="text/javascript" src="js/radar-chart.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+  <script language="javascript">
+	
+</script>
+
+  <script type="text/javascript">
+    RadarChart.defaultConfig.color = function() {};
+    RadarChart.defaultConfig.radius = 3;
+  </script>
+
+  
+</head>
+<body>
+<!-- <textarea id="data"></textarea> -->
+<h2 align="center">Radar chart analysing Times Higher Education data</h2>
+<p>The below radar chart anaylzes Times Higher Education data for three countries over a period of two years (2015 and 2016). Hover over the areas to know more about the specific country.
+<div class="section group">
+
+	<div class="col span_1_of_2">
+	<ul class="legend">
+    <li><span class="superawesome"></span> United States</li>
+    <li><span class="awesome"></span> China</li>
+    <li><span class="kindaawesome"></span> Israel</li>
+</ul>
+<br>
+<p align="center"> Times Higher Education Data for <strong>2015</strong>  </p>
+	 	<div class="chart-container" align="center"></div>
+	 	
+	</div>
+	<div class="col span_1_of_2">
+	<p>&nbsp;</p> 
+	<p align="center"> Times Higher Education Data for <strong>2016</strong> </p>
+		<div class="chart-container-two" align="center"></div>
+
+	</div>
+</div>
+
+<a class="button button-primary" href="index.html">Back to Home</a><br><br>
+
+
+<!-- <div style="width: 100%; overflow: hidden;">
+  <div class="chart-container" style="width: 600px; float: left; padding: 60px;"><p align="center">asd</p></div>
+<div class="chart-container-two" style="margin-left: 620px; padding: 60px;"></div>
+</div> -->
+
+</body>
+
+<script type="text/javascript">
+
+var mycfg = {
+  w: 500,
+  h: 500,
+  maxValue: 0.6,
+  levels: 6,
+  ExtraWidthX: 300
+}
+
+
+var a;
+    var data = [];
+
+var b;
+
+var datatwo = [];
+    // var c = document.getElementById("data").value
+    
+    
+//var csv = c.split("\n").map(function(i){return i.split(",")})
+
+  //console.log(csv)
+
+function random() {
+	$.ajax({
+	        type: "GET",
+	        url: "times2015.csv",
+	        dataType: "text",
+	        success: function (data) {
+	           a = data.split("\n").map(function(i){return i.split(",")})
+	           a.pop();
+	           console.log(a)
+	           first(a)
+	        }
+	    });
+
+}
+
+function randomtwo() {
+	$.ajax({
+	        type: "GET",
+	        url: "times2016.csv",
+	        dataType: "text",
+	        success: function (datatwo) {
+	           b = datatwo.split("\n").map(function(i){return i.split(",")})
+	           b.pop();
+	           console.log("SECOND")
+	           console.log(b)
+	           second(b)
+	        }
+	    });
+
+}
+
+
+
+function first(csv){
+	console.log(csv)
+	//csv.pop();
+headers = []
+  csv.forEach(function(item, i){
+    if(i==0){
+      headers = item;
+    }else{
+      newSeries = {};
+      item.forEach( function(v, j){
+        if(j==0){
+          newSeries.className = v;
+          newSeries.axes = [];
+        }else{
+          newSeries.axes.push({"axis":[headers[j]], "value": parseFloat(v)});
+        }
+      });
+      console.log(newSeries)
+      console.log("next")
+      data.push(newSeries);
+      console.log(data)
+    }
+  })
+  firsttwo(data)
+}
+
+
+
+
+
+function firsttwo(data)
+{
+	RadarChart.defaultConfig.levelTick = true;
+    RadarChart.draw(".chart-container", data, mycfg);
+}
+
+$(document).ready(function () {
+    random();
+
+
+});
+
+
+
+function second(csv){
+	console.log(csv)
+	//csv.pop();
+headers = []
+  csv.forEach(function(item, i){
+    if(i==0){
+      headers = item;
+    }else{
+      newSeries = {};
+      item.forEach( function(v, j){
+        if(j==0){
+          newSeries.className = v;
+          newSeries.axes = [];
+        }else{
+          newSeries.axes.push({"axis":[headers[j]], "value": parseFloat(v)});
+        }
+      });
+      console.log(newSeries)
+      console.log("next")
+      datatwo.push(newSeries);
+      console.log(datatwo)
+    }
+  })
+  secondtwo(datatwo)
+}
+
+function secondtwo(datatwo)
+{
+	RadarChart.defaultConfig.levelTick = true;
+    RadarChart.draw(".chart-container-two", datatwo, mycfg);
+}
+
+$(document).ready(function () {
+    random();
+    randomtwo();
+    console.log("Here 2")
+
+
+});
+
+
+
+
+
+
+
+  </script>
+
+
+
+  <script type="text/javascript">
+    // RadarChart.defaultConfig.levelTick = true;
+    // RadarChart.draw(".chart-container", data);
+  </script>
+</html>

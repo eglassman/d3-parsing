@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+  <link rel="stylesheet" href="src/radar-chart.css">
+  <link rel="stylesheet" href="src/radar-main.css">
+  <link rel="stylesheet" href="src/pc-style.css">
+  <link rel="shortcut icon" href=http://www.freshdesignweb.com/wp-content/themes/fv28/images/icon.ico />
+  <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+  <script type="text/javascript" src="src/radar-chart.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="http://d3js.org/d3.v3.js"></script>
+  <script src="https://rawgit.com/tpreusse/radar-chart-d3/master/src/radar-chart.js"></script>
+</head>
+
+<body class='backdrop'>
+  <h1>Global University Ranking Comparisons</h1>
+  <p width='960px'>Not all universities were created equal. We want to show on how the world's top 200 universities, dispersed
+    across each continents, performed on key metrics compared with each others. Through the use
+    of a parallel coordinates chart and the affordance to browse through different years, we hope you will
+    learn something about the relative strength of top schools and how they evolved. </p>
+  <p>
+    We then use a radar chart for you to compare top universities from each country. This time the scores are averaged across
+    the years, so you can compare how each country's top universities compare with each other generally. 
+  </p>
+  <h1>Parallel Coordinates Chart</h1>
+  <p> Click on buttons to change the year of data shown.</p>
+  <p> The average score of schools in each country from 2011 - 2016 will display</p><br /><br />
+
+  <div class="year_button">
+    <button type="button active" id="2011">2011</button>
+    <button type="button" id="2012">2012</button>
+    <button type="button" id="2013">2013</button>
+    <button type="button" id="2014">2014</button>
+    <button type="button" id="2015">2015</button>
+    <button type="button" id="2016">2016</button>
+  </div><br /><br />
+
+  <script>
+    var margin = {
+        top: 30,
+        right: 10,
+        bottom: 10,
+        left: 10
+      },
+      width = 1440 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal().rangePoints([0, width], 1),
+      y = {},
+      dragging = {};
+
+    var line = d3.svg.line(),
+      axis = d3.svg.axis().orient("left"),
+      background,
+      foreground;
+
+    var svg1 = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g").attr('class', 'pc')
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var year = '2011';
+
+    var dataHolder = {
+      '2011': [],
+      '2012': [],
+      '2013': [],
+      '2014': [],
+      '2015': [],
+      '2016': []
+    };
+
+    d3.csv("PC_timesData.csv", function(error, universities) {
+
+      // Extract the list of dimensions and create a scale for each.
+      x.domain(dimensions = d3.keys(universities[0]).filter(function(d) {
+        return d != "university_name" && d != "country" && d != "female_male_ratio" && d != "year" && (y[d] = d3.scale.linear()
+          .domain(d3.extent(universities, function(p) {
+            return +p[d];
+          }))
+          .range([height, 0]));
+      }));
+
+      universities.forEach(function(d) {
+        var x = {};
+        if (d.country == 'United States of America' || d.country == 'Canada') {
+          x.continent = 'NA';
+        }
+        else if (d.country == 'Brazil') {
+          x.continent = 'SA';
+        }
+        else if (d.country == 'Sweden' || d.country == 'Finland' || d.country == 'Norway' || d.country == 'Denmark' || d.country == 'Republic of Ireland'
+         || d.country == 'United Kingdom' || d.country == 'Netherlands' || d.country == 'Belgium' || d.country == 'Germany' || d.country == 'Luxembourg'
+         || d.country == 'France' || d.country == 'Switzerland' || d.country == 'Austria' || d.country == 'Italy' || d.country == 'Spain'
+         || d.country == 'Russia' || d.country == 'Turkey') {
+          x.continent = 'EU';
+        }
+        else if (d.country == 'Egypt' || d.country == 'Israel' || d.country == 'South Africa') {
+          x.continent = 'AF';
+        }
+        else if (d.country == 'China' || d.country == 'South Korea' || d.country == 'Japan' || d.country == 'Hong Kong' || d.country == 'Taiwan' || d.country == 'Singapore') {
+          x.continent = 'AA';
+        }
+        else if (d.country == 'Australia' || d.country == 'New Zealand') {
+          x.continent = 'OC';
+        }
+        x.world_rank = +d.world_rank;
+        x.teaching = +d.teaching;
+        x.international = +d.international;
+        x.research = +d.research;
+        x.citations = +d.citations;
+        x.income = +d.income;
+        x.total_score = +d.total_score;
+        x.year = d.year;
+        switch (x.year) {
+          case '2016':
+            dataHolder['2016'].push(x);
+            break;
+          case '2015':
+            dataHolder['2015'].push(x);
+            break;
+          case '2014':
+            dataHolder['2014'].push(x);
+            break;
+          case '2013':
+            dataHolder['2013'].push(x);
+            break;
+          case '2012':
+            dataHolder['2012'].push(x);
+            break;
+          default:
+            dataHolder['2011'].push(x);
+        }
+      })
+      populate(year, dataHolder);
+      // Add a group element for each dimension.
+      var g = svg1.selectAll(".dimension")
+        .data(dimensions)
+        .enter().append("g")
+        .attr("class", "dimension")
+        .attr("transform", function(d) {
+          return "translate(" + x(d) + ")";
+        })
+        .call(d3.behavior.drag()
+          .origin(function(d) {
+            return {
+              x: x(d)
+            };
+          })
+          .on("dragstart", function(d) {
+            dragging[d] = x(d);
+            background.attr("visibility", "hidden");
+          })
+          .on("drag", function(d) {
+            dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+            foreground.attr("d", path);
+            dimensions.sort(function(a, b) {
+              return position(a) - position(b);
+            });
+            x.domain(dimensions);
+            g.attr("transform", function(d) {
+              return "translate(" + position(d) + ")";
+            })
+          })
+          .on("dragend", function(d) {
+            delete dragging[d];
+            transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+            transition(foreground).attr("d", path);
+            background
+              .attr("d", path)
+              .transition()
+              .delay(500)
+              .duration(0)
+              .attr("visibility", null);
+          }));
+
+      // Add an axis and title.
+      g.append("g")
+        .attr("class", "axis")
+        .each(function(d) {
+          d3.select(this).call(axis.scale(y[d]));
+        })
+        .append("text")
+        .style("text-anchor", "middle")
+        .attr("y", -9)
+        .text(function(d) {
+          return d;
+        });
+
+      // Add and store a brush for each axis.
+      g.append("g")
+        .attr("class", "brush")
+        .each(function(d) {
+          d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+        })
+        .selectAll("rect")
+        .attr("x", -8)
+        .attr("width", 16);
+    });
+
+    function populate(year, dataHolder) {
+      // Add grey background lines for context.
+      background = svg1.append("g")
+        .attr("class", "background")
+        .selectAll("path")
+        .data(dataHolder[year])
+        .enter().append("path")
+        .attr("d", path);
+      // Add blue foreground lines for focus.
+      foreground = svg1.append("g")
+        .attr("class", "foreground")
+        .selectAll("path")
+        .data(dataHolder[year])
+        .enter().append("path")
+        .attr("d", path)
+        .attr("class", function(d) {
+          if (d['continent'] == 'NA') {
+            return 'NA';
+          } else if (d['continent'] == 'SA') {
+            return 'SA';
+          } else if (d['continent'] == 'EU') {
+            return 'EU';
+          } else if (d['continent'] == 'AA') {
+            return 'AA';
+          } else if (d['continent'] == 'OC') {
+            return 'OC';
+          } else if (d['continent'] == 'AF') {
+            return 'AF';
+          }
+        });
+    }
+
+    $('button').on('click', function() {
+      d3.selectAll('.background').remove();
+      d3.selectAll('.foreground').remove();
+      populate($(this).text(), dataHolder);
+    })
+
+    function position(d) {
+      var v = dragging[d];
+      return v == null ? x(d) : v;
+    }
+
+    function transition(g) {
+      return g.transition().duration(500);
+    }
+
+    // Returns the path for a given data point.
+    function path(d) {
+      return line(dimensions.map(function(p) {
+        return [position(p), y[p](d[p])];
+      }));
+    }
+
+    function brushstart() {
+      d3.event.sourceEvent.stopPropagation();
+    }
+
+    // Handles a brush event, toggling the display of foreground lines.
+    function brush() {
+      var actives = dimensions.filter(function(p) {
+          return !y[p].brush.empty();
+        }),
+        extents = actives.map(function(p) {
+          return y[p].brush.extent();
+        });
+      foreground.style("display", function(d) {
+        return actives.every(function(p, i) {
+          return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+        }) ? null : "none";
+      });
+    }
+  </script>
+
+  <h1>Radar Chart</h1>
+  <p> Click on buttons to add country onto the Radar Chart.</p>
+  <p> The average score of schools in each country from 2011 - 2016 will display</p>
+  <p> Please remove countries in the same order to avoid color confusion. Also please use Chrome Browser.</p>
+
+  <!-- for radar chart -->
+  <div class='chart-container'></div></br></br>
+
+  <!-- display all buttons here -->
+  <div id="buttons"><li id="refresh"><a data-country= data-action="1" class="tag" id="button">Refresh</a></li><br></div>
+</body>
+
+<script>
+  // setting the default configuration for radar
+  RadarChart.defaultConfig.color = function(i) { c = colorArray ; return c[i];}
+  //var colorScale = d3.scale.category20();
+  //RadarChart.defaultConfig.colors = colorScale;
+  RadarChart.defaultConfig.radius = 3;
+  RadarChart.defaultConfig.w = 450;
+  RadarChart.defaultConfig.h = 450;
+  RadarChart.defaultConfig.levels = 10;
+
+  // declaring needed variables
+  var colorArray = [];
+  var colorDict = {};
+  var radar_data = [];
+  var dict = {};
+  var finalData = [];
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  var svg = d3.select('body').append('svg').classed('svg', 1).attr('width', cfg.w + 50).attr('height', cfg.h + cfg.h / 4);
+  var colorIndex = 0;
+
+  // read the file when document is ready
+  $(document).ready(function() {
+    $.ajax({
+      type: "GET",
+      url: "Radar_Country_Score.csv",
+      dataType: "text",
+      success: function(data) {extractData(data);}
+    });
+  });
+
+  // generate 50 random color
+  $(document).ready(function() {
+    for (i=0; i<50; i++)
+      colorArray.push("#" + ((1 << 24) * Math.random() | 0).toString(16))
+  });
+
+  //function to process csv data and prepare the data structure
+  function extractData(csv) {
+    var lines = csv.split(/\r\n|\n|\r/); //spliting lines
+    for (var i=0; i<lines.length - 1; i++) {
+        var data = lines[i].split(","); //splitting lines into elements
+        displayData(String(data[0]));
+        dict[data[0]] = i; //storing key value pair of country name and index for searches
+        var _object = {};
+        _object.className = String(data[0]);
+        axes_list = []
+        axes_list.push({ axis: "teaching", value: parseFloat(data[1])});
+        axes_list.push({ axis: "total_score", value: parseFloat(data[2])});
+        axes_list.push({ axis: "research", value: parseFloat(data[3])});
+        axes_list.push({ axis: "citations", value: parseFloat(data[4])});
+        axes_list.push({ axis: "income", value: parseFloat(data[5])});
+        _object.axes = axes_list
+        radar_data.push(_object)
+    }
+  }
+
+  //take action when user clicks on buttons
+  $("#buttons").on('click', '#button', function() {
+      if (this.getAttribute("data-action") == "1") {
+        $(this).css('color', 'white');
+        addRadar(this.getAttribute("data-country"));
+        // colorDict[$(this).text()] = colorIndex;
+        //colorArray.push(String($("polygon")[finalData.length - 1 ].getAttribute('style').substring(8, 25)));
+        // index = colorDict[$(this).text()]
+        $(this).css('background-color', colorArray[colorIndex]);
+        colorIndex++;
+        this.setAttribute("data-action", "2");
+      } else {
+        $(this).css('background-color', '#f2f2f3');
+        $(this).css('color', '#778187');
+
+        // $("a").each(function(){
+        //   alert($(this).children().css('background-color)');
+        //   $(this).children().css('background-color', colorArray[$(this).text()]);
+        // });
+
+        removeRadar(this.getAttribute("data-country"));
+        //colorArray.pop();
+        this.setAttribute('data-action', "1");
+        colorIndex--;
+      }
+  });
+
+  // refresh buttons for user to refresh
+  $("#refresh").on('click', '#button', function() {
+    location.reload();
+  });
+
+  // function for adding a new data onto radar chart
+  function addRadar(country) {
+    index = dict[country];
+    finalData.push(radar_data[index])
+    displayRadar();
+  }
+
+  // function for removing a new data onto radar chart
+  function removeRadar(country) {
+    for (i=0; i< finalData.length; i++) {
+      if (finalData[i].className == country) {
+        finalData.splice(i, 1);
+      }
+      displayRadar();
+  }}
+
+  // function for dsiplayng a new data onto radar chart
+  function displayRadar(){
+    if (finalData == 0) {
+      //colorArray.pop();
+      colorIndex--;
+    }
+    svg.selectAll("g").remove();
+    svg.append('g').datum(finalData).call(chart);
+  }
+
+  // display the buttons
+  function displayData(data) {
+      var button = $('<li id="buttonlist"><a data-country="' + data + '" data-action="1" class="tag" id="button">' + data + '</a></li>');
+      button.appendTo('#buttons');
+  }
+
+</script>
+</html>

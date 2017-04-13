@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+<body>
+<div class="container">
+  <h2>D3 assignment <a href="" class="chart_link">Parallel Coordinate Chart</a> <a class="chart_link" href="./radar.html">Radar Chart</a></h2>
+  <h3>World Universities Rankings</h3>
+
+  <!-- Year radio button options -->
+  <div id="year_option">
+    <div class="wrap">
+      <input type="radio" name="year_option" value="2011" checked>
+      <label>2011</label>
+    </div>
+    <div class="wrap">
+      <input type="radio" name="year_option" value="2012">
+      <label>2012</label>
+    </div>
+    <div class="wrap">
+      <label>2013</label>
+      <input type="radio" name="year_option" value="2013">
+      <label>2013</label>
+    </div>
+    <div class="wrap">
+      <input type="radio" name="year_option" value="2014">
+      <label>2014</label>
+    </div>
+    <div class="wrap">
+      <input type="radio" name="year_option" value="2015">
+      <label>2015</label>
+    </div>
+    <div class="wrap">
+      <input type="radio" name="year_option" value="2016">
+      <label>2016</label>
+    </div>
+  </div>
+
+  <div id="chart"></div>
+
+  <!-- Continent check button options -->
+  <div id="continent_option">
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="africa" >
+      <div class="africa lenged"></div>
+      <label>Africa</label>
+    </div>
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="australia" >
+      <div class="australia lenged"></div>
+      <label>Australia</label>
+    </div>
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="asia" checked>
+      <div class="asia lenged"></div>
+      <label>Asia</label>
+    </div>
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="europe">
+      <div class="europe lenged"></div>
+      <label>Europe</label>
+    </div>
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="north_america" checked>
+      <div class="north_america lenged"></div>
+      <label>North America</label>
+    </div>
+    <div class="wrap">
+      <input type="checkbox" name="continent_option" value="south_america">
+      <div class="south_america lenged"></div>
+      <label>South America</label>
+    </div>
+  </div>
+  <div>The data is filtered by year or continet. If a path is hovered over, it'll be highlighted.</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var all_universities;
+var universities;
+var titles = {
+  "world_rank": "World Rank",
+  "teaching": "Teaching Score",
+  "international": "international Outlook",
+  "research": "Research Score",
+  "num_students": "Number of Students",
+  "student_staff_ratio": "Student Staff Ratio"
+}
+var selected_continents = [
+  "asia", "north_america"
+]
+
+// Filter data by continent
+$("#continent_option input").on("change", function(){
+  selected_continents = [];
+  $(":checkbox").each(function(){
+    if(this.checked)
+      selected_continents.push($(this).val());
+  });
+  render_chart();
+});
+
+// Filter data by year
+$("#year_option input").on("change", function(){
+  var year = $("input[name=year_option]:checked", "#year_option").val();
+  change_year(year);
+});
+
+var margin = {top: 30, right: 10, bottom: 10, left: 10},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal().rangePoints([0, width], 1),
+    y = {},
+    dragging = {};
+
+var line = d3.svg.line(),
+    axis = d3.svg.axis().orient("left"),
+    background,
+    foreground;
+
+var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+function render_chart() {
+  d3.select("g.foreground").remove();
+  d3.select("g.background").remove();
+  d3.selectAll("g.dimension").remove();
+
+  // Add grey background lines for context.
+  background = svg.append("g")
+      .attr("class", "background")
+      .selectAll("path")
+      .data(universities)
+      .enter().append("path")
+      .attr("d", path)
+      .attr("class", function(d){ 
+          var continent = d["continent"].replace(" ", "_").toLowerCase();
+          if (selected_continents.indexOf(continent) < 0) {
+            return "hide";
+          }
+          return "show";
+        });
+
+  // Add blue foreground lines for focus.
+  foreground = svg.append("g")
+      .attr("class", "foreground")
+      .selectAll("path")
+      .data(universities)
+      .enter().append("path")
+      .attr("d", path)
+      .attr("class", function(d){ 
+          var continent = d["continent"].replace(" ", "_").toLowerCase();
+          if (selected_continents.indexOf(continent) < 0) {
+            return continent+" hide";
+          }
+          return continent+" show";
+        })
+      .attr("stroke-width", 2)
+      .on("mouseover", highlight)
+      .on("mouseout", cleanHighlight);
+
+  // Add a group element for each dimension.
+  var g = svg.selectAll(".dimension")
+      .data(dimensions)
+      .enter().append("g")
+      .attr("class", "dimension")
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .call(d3.behavior.drag()
+        .origin(function(d) { return {x: x(d)}; })
+        .on("dragstart", function(d) {
+          dragging[d] = x(d);
+          background.attr("visibility", "hidden");
+        })
+        .on("drag", function(d) {
+          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+          foreground.attr("d", path);
+          dimensions.sort(function(a, b) { return position(a) - position(b); });
+          x.domain(dimensions);
+          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+        })
+        .on("dragend", function(d) {
+          delete dragging[d];
+          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+          transition(foreground).attr("d", path);
+          background
+              .attr("d", path)
+              .transition()
+              .delay(500)
+              .duration(0)
+              .attr("visibility", null);
+        }))
+
+  // Add an axis and title.
+  g.append("g")
+      .attr("class", "axis")
+      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+      .append("text")
+      .style("text-anchor", "middle")
+      .attr("y", -9)
+      .text(function(d) { return titles[d];});
+
+  // Add and store a brush for each axis.
+  g.append("g")
+      .attr("class", "brush")
+      .each(function(d) {
+        d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+      })
+      .selectAll("rect")
+      .attr("x", -8)
+      .attr("width", 16);
+}
+
+function change_year(year) {
+  universities = all_universities.filter(function(school){
+    return school['year'] == year && school['world_rank'] <= 200 ;
+  });
+
+  // Extract the list of dimensions and create a scale for each.
+  x.domain(dimensions = d3.keys(all_universities[0]).filter(function(d) {
+
+    var range_start = height;
+    var range_end = 0;
+
+    if (d == "world_rank") {
+      range_start = 0;
+      range_end = height;
+    }
+
+    return (d == "teaching" || d == "world_rank" 
+      || d == "international"  || d == "research" 
+      || d == "num_students" || d == "student_staff_ratio")
+       && (y[d] = d3.scale.linear()
+        .domain(d3.extent(universities, function(p) { return +p[d]; }))
+        .range([range_start, range_end]));
+  }));
+
+  render_chart();
+}
+
+d3.csv("university_ranking_continent.csv", function(error, universities_csv) {
+  // universities = universities.map(function(school){
+  //   var ratio = school['female_male_ratio'];
+  //   console.log(ratio.split(" : "));
+  //   school['female_male_ratio'] = ratio == "-" ? -1 : ratio.split(" : ")[0];
+  //   // if (school['female_male_ratio'] != -1) console.log(school['female_male_ratio']);
+  //   return school;
+  // });
+
+  // var countrySet = d3.set(d3.keys(universities[0]).filter(function(d) {
+  //   return d == "country";
+  // }));
+  all_universities = universities_csv;
+
+  var countrySet = d3.set(all_universities.map(function(school){
+    return school['country'];
+  }));
+
+  all_universities = all_universities.map(function(school){
+    school['num_students'] = school['num_students'].replace(",", "");
+
+    var rank_array = school['world_rank'].split("-");
+    if (rank_array.length > 1) 
+      // school['world_rank'] = d3.mean(rank_array);
+      school['world_rank'] = rank_array[1];
+
+    return school;
+  });
+
+  change_year(2011);
+});
+
+function position(d) {
+  var v = dragging[d];
+  return v == null ? x(d) : v;
+}
+
+function transition(g) {
+  return g.transition().duration(500);
+}
+
+// Returns the path for a given data point.
+function path(d) {
+  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+}
+
+function brushstart() {
+  d3.event.sourceEvent.stopPropagation();
+}
+
+// Handles a brush event, toggling the display of foreground lines.
+function brush() {
+  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
+      extents = actives.map(function(p) { return y[p].brush.extent(); });
+  foreground.style("display", function(d) {
+    return actives.every(function(p, i) {
+      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    }) ? null : "none";
+  });
+}
+
+// Add/remove hightlight class
+function highlight(d, i) {
+  $(".foreground path.show").addClass("dim");
+  if($(this).hasClass("show")) {
+    $(this).addClass("highlight");
+  }
+}
+
+function cleanHighlight() {
+  $(".foreground path.show").removeClass("dim");
+  $(this).removeClass("highlight");
+}
+
+</script>
+</body>
+</html>

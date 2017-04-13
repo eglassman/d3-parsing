@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="radar-chart.css">
+<h1>University Data by Region</h1>
+<body>
+<p>Click on buttons to update chart and view the average values for all universities in that region.</p>
+<p>Rollover data points for exact values.</p>
+<div id="student_button">Student Staff Ratio </div>
+<div id="international_button">Percent International Students</div>
+<div id="female_button">Female Ratio</div>
+<div class="chart-container"></div>
+
+</body>
+
+<style>
+    body {
+        padding: 20px;
+    }
+
+    h1 {
+        position: relative;
+        left: 125px;
+        font-size: 30px;
+    }
+
+    div#student_button {
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 30px;
+        border-radius: 2px;
+        padding: 5px;
+        background-color: #84DCCF;
+        alignment: left;
+    }
+
+    div#international_button {
+        display: inline-block;
+        cursor: pointer;
+        margin: 30px;
+        border-radius: 2px;
+        padding: 5px;
+        background-color: #A6D9F7;
+    }
+
+    div#female_button {
+        display: inline-block;
+        cursor: pointer;
+        margin: 30px;
+        border-radius: 2px;
+        padding: 5px;
+        background-color: #BF98A0;
+    }
+
+
+</style>
+
+<style>
+    .radar-chart .area {
+        fill-opacity: 0.7;
+    }
+    .radar-chart.focus .area {
+        fill-opacity: 0.3;
+    }
+    .radar-chart.focus .area.focused {
+        fill-opacity: 0.9;
+    }
+    .area.StudentStaff, .StudentStaff .circle {
+        fill: #84DCCF;
+        stroke: none;
+    }
+    .area.InternationalStudents, .InternationalStudents .circle {
+        fill: #A6D9F7;
+        stroke: none;
+    }
+    .area.FemaleRatio, .FemaleRatio .circle {
+        fill: #BF98A0;
+        stroke: none;
+    }
+
+
+</style>
+
+<script src="http://d3js.org/d3.v3.js"></script>
+<script src="radar-chart.js"></script>
+
+<script>
+    RadarChart.defaultConfig.color = function() {};
+    RadarChart.defaultConfig.radius = 3;
+    RadarChart.defaultConfig.w = 600;
+    RadarChart.defaultConfig.h = 600;
+</script>
+
+<span></span>
+
+<script>
+    var dataset = ['Average Student Staff Ratio','Average % of International Students', 'Average Female Ratio'];
+
+    var colors = ['#84DCCF', '#A6D9F7', '#BF98A0'];
+
+    var data_titles = ['data_student', 'data_international', 'data_female'];
+
+    var data_student = [
+        {
+            className: 'StudentStaff', // optional can be used for styling
+            axes: [
+                {axis: "Africa", value: 25.66},
+                {axis: "Asia", value: 13.58},
+                {axis: "Australia & New Zealand", value: 25.5},
+                {axis: "Eastern Europe", value: 12.94},
+                {axis: "Europe", value: 21.7},
+                {axis: "Middle East", value: 20.78},
+                {axis: "North America", value: 14.78},
+                {axis: "South America", value: 16.63}
+            ]
+        }
+    ];
+
+    var data_international = [
+        {
+            className: 'InternationalStudents',
+                    axes: [
+            {axis: "Africa", value: 0.09},
+            {axis: "Asia", value: 0.09},
+            {axis: "Australia & New Zealand", value: 0.27},
+            {axis: "Eastern Europe", value: 0.07},
+            {axis: "Europe", value: 0.19},
+            {axis: "Middle East", value: 0.07},
+            {axis: "North America", value: 0.14},
+            {axis: "South America", value: 0.03}
+        ]
+        }
+    ];
+
+    var data_female = [
+        {
+            className: 'FemaleRatio',
+                    axes: [
+            {axis: "Africa", value: 52.65},
+            {axis: "Asia", value: 36},
+            {axis: "Australia & New Zealand", value: 55},
+            {axis: "Eastern Europe", value: 54.43},
+            {axis: "Europe", value: 51.78},
+            {axis: "Middle East", value: 46.74},
+            {axis: "North America", value: 50.22},
+            {axis: "South America", value: 46.37}
+        ]
+        }
+    ];
+
+
+</script>
+
+<script>
+
+    function draw(update_data) {
+
+        //draw radar chart
+        var radar = RadarChart.draw(".chart-container", update_data);
+
+        //create svg
+        var svg = d3.select('body').append('svg')
+                .attr('width', 600)
+                .attr('height', 600);
+
+
+        //legend did not use
+        /*svg.selectAll("rect")
+                .data(colors)
+                .enter()
+                .append("rect")
+                .attr("fill", function (d) {
+                    return d;
+                })
+                .attr("x", function (d, i) {
+                    return i * (700 / dataset.length);
+                })
+                .attr("y", 50)
+                .attr("width", 30)
+                .attr("height", 30);
+
+
+        svg.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function (d) {
+                    return d;
+                })
+                .attr("x", function (d, i) {
+                    return i * (700 / dataset.length);
+                })
+                .attr("y", 45)
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "11px")
+                .attr("fill", "black");*/
+    }
+
+    //redraw radar chart based on selection
+    function update_student() {
+        d3.selectAll("svg").remove();
+        draw(data_student);
+    }
+
+    function update_international() {
+        d3.selectAll("svg").remove();
+        draw(data_international);
+    }
+
+    function update_female() {
+        d3.selectAll("svg").remove();
+        draw(data_female);
+    }
+
+
+    window.onload = draw(data_student);
+
+    //update radar chart from clicking on corresponding button
+    d3.select('#student_button')
+            .on("click",update_student);
+    d3.select('#international_button')
+            .on("click",update_international);
+    d3.select('#female_button')
+            .on("click",update_female);
+
+
+</script>
+
+

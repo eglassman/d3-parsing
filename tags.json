@@ -1,5 +1,17 @@
 {
 "Statistics": ["min", "max", "extent", "sum", "mean", "median", "quantile", "variance", "deviation"],
+"Search": ["scan", "bisect", "bisectRight", "bisectLeft", "bisector", "ascending", "descending"],
+"Transformations": ["cross", "merge", "pairs", "permute", "shuffle", "ticks", "tickStep", "range", "transpose", "zip"],
+"Histograms": ["histogram", "thresholdFreedmanDiaconis", "thresholdScott", "thresholdSturges"],
 "Axes": ["axisTop", "axisRight", "axisBottom", "axisLeft"],
+"Brushes": ["brush", "brushX",  "brushY",  "brushSelection"],
+"Chords": ["chord", "ribbon"],
+"Objects": ["keys", "values",  "entries"],
+"Maps": ["map"],
+"Sets": ["set"],
+"Nests": ["nest"],
+"Colors": ["color", "rgb",  "hsl",  "lab",  "hcl",  "cubehelix"],
+"Dispatches": ["dispatch"],
+"Dragging": ["drag", "dragDisable",  "dragEnable"],
 "Requests": ["request", "csv", "html", "json", "text", "tsv", "xml"]
 }

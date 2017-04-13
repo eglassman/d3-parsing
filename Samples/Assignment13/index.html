@@ -1,0 +1,252 @@
+<!doctype html>
+<!-- The parallel coordinate chart they provided us with: http://bl.ocks.org/jasondavies/1341281 --> 
+<!-- The World University Rankings list: https://www.kaggle.com/mylesoneill/world-university-rankings --> 
+
+<!-- For parallel coordinate reference: http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8 -->
+<!-- For parallel coordinate reference and divgrid reference: http://bl.ocks.org/eesur/1a2514440351ec22f176 --> 
+<!--For divgrid reference: http://bl.ocks.org/syntagmatic/3687826--> 
+<!-- For how margins impact everything else: https://gist.github.com/mbostock/3019563 --> 
+<!-- Extensive d3 tutorial with data: https://www.dashingd3js.com/table-of-contents -->
+<!-- Why we even use parallel coordinates: http://www.juiceanalytics.com/writing/writing/parallel-coordinates --> 
+
+<title>World Ranking Universities</title> 
+<!doctype html>
+<link rel="stylesheet" type="text/css" href="http://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="d3.parcoords.js"></script>
+<script src="divgrid.js"></script>
+<script src="colorbrewer.js"></script>
+
+<style>
+html, body  {
+  height: 100%;
+  /*margin-left: 20px;*/
+  background-color: #000000 !important;
+  color: #b2b2b2;
+  font-family: sans-serif;
+  /*width: 100%;*/
+}
+/*text {
+  font-size: 12px;
+  fill: #ffffff;
+}*/
+/*
+text.label {
+  font-weight: bold;
+  color: #ffffff;
+}*/
+
+#example {
+  width: 55% !important;
+  background-color: #000000 !important;
+  color: #ffffff;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.axis .label {
+  font-weight: bold;
+}
+
+.axis text {
+  fill: #fff;
+  stroke: none;
+  font-size: 9px;
+}
+
+.axis path {
+  fill: none;
+  stroke: #f00;
+  shape-rendering: crispEdges;
+}
+
+
+/*
+.background path {
+ fill: none;
+ stroke: none;
+ shape-rendering: crispEdges;
+}
+
+.foreground path {
+ fill: none;
+ stroke: teal;
+}
+
+.brush .extent {
+ fill-opacity: .3;
+ stroke: #fff;
+ shape-rendering: crispEdges;
+}
+
+.axis line,
+.axis path {
+ fill: none;
+ stroke: #000;
+ shape-rendering: crispEdges;
+}*/
+
+/* data table styles */
+  #grid { height: 240px; 
+    margin-left: 0px; margin-right: -100px;}
+  .row, .header { clear: left; font-size: 11px; line-height: 24px; height: 24px; }
+  .row:nth-child(odd) { background: rgba(0,0,0,0.05); }
+  .header { font-weight: bold; }
+  .cell { float: left; overflow: hidden; white-space: nowrap; width: 130px; height: 18px; }
+  .col-0 { width: 70px; }
+
+
+.section {
+  width: 50%;
+  display: inline-block;
+  float: right;
+}
+/*
+svg {
+  font: 10px sans-serif;
+}*/
+
+/* tooltip */
+/*.tooltip {   
+
+background-color: rgba(220,220,220,0.5);
+color: #333;
+          margin: 10px;
+          height: 25px;
+          padding-right: 10px;
+          padding-left: 10px; 
+          padding-top: 10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+}*/
+
+
+</style>
+<body>
+<section>
+<h1>World University Rankings by Country</h1>
+<p style="width: 50%; ">Below is a parallel coordinates chart with colors corresponding to each year from 2011 to 2016, inclusive. There are over 800 unique universities, many of which added in latter years of this ranking endeavor. </p>
+<p style ="width: 50%; ">The axes are reorderable, and you can highlight and brush the data. To reset a dimension, double-click the axis. Feel free to observe the data in any way you like! The purpose of parallel coordinates charts is to brush and highlight a subset of data within a big swath of it. Beware not to draw conclusions refering to trends, however, as those are not easily interpreted from a parallel coordinates chart. </p>
+</section>
+<div id="example" class="parcoords" style="width:100%;height:650px"></div>
+<div id="grid" class="section">
+  <p style="width: 80%">For your convenience, a table is provided alongside the parallel coordinates chart to highlight the top ten universities for your highlighted region, prioritizing the oldest year's brackets.
+  </p>
+
+  <p>To view a radar chart of a subset of this data, go <a href="./index_radar.html" style="color: pink;">here</a>.</p>
+
+</div>
+
+</body>
+<script>
+
+/* EDIT TOOLTIP STUFF */
+
+// var tooltip = d3.select("body")
+//     .append("div")
+//     .style("position", "absolute")
+//     .style("z-index", "10")
+//     .style("visibility", "hidden")
+//     .text("a simple tooltip")
+//     .attr("class","tooltip");
+
+var parcoords = d3.parcoords()("#example");
+
+// var foreground,
+//   background;
+
+var svg = d3.select("body").append("svg")
+  .append("g");
+
+
+// https://ecoengine.berkeley.edu/api/observations/?extra=kingdom,phylum,clss,order,family,genus,last_modified&page_size=2000
+d3.csv("timesData.csv", function(raw) {
+  var data = raw.map(function(d){
+    // parse dates
+    d.year = new Date(d.year);
+    // var whole_date = new Date(d.year);
+    // d.year = whole_date.getFullYear();
+    // console.log(typeof d.country);
+    return d;
+  });
+
+    // var color = d3.scale.linear()
+    //   .domain([9,50])
+    //   .range(["#7AC143", "#000000"]);
+
+  // var color = d3.scale.ordinal()
+      // .range(colorbrewer.RdBu[9]);
+    // .domain(["2011", "2012", "2013", "2014", "2015", "2016"])
+    // .range(colorbrewer.Accent[6]);
+    // .range(["rgb(158,1,66)", "rgb(213,62,79)", "rgb(244,109,67)", "rgb(253,174,97)", "rgb(254,224,139)", "rgb(255,255,191)", "rgb(230,245,152)", "rgb(171,221,164)", "rgb(102,194,165)", "rgb(50,136,189)", "rgb(94,79,162)"].reverse());
+
+var color_scale = d3.scale.ordinal()
+  // .domain([9, 50])
+  .range(colorbrewer.Dark2[6].reverse());  
+  // .interpolate(d3.interpolateLab);
+
+
+var color = function(d) { return color_scale(d['year']); };
+
+  parcoords.ctx.foreground.lineWidth = 0.75;
+  parcoords.ctx.foreground.globalCompositeOperation = "darken";
+
+  parcoords
+    .data(data)
+    .dimensions([/*"university_name",*/ "country", "world_rank", "year", /*"teaching", "international", "research", "citations", */"income", "total_score", /*"num_students", "student_staff_ratio",  "international_students" , "female_male_ratio"*/])
+    .types({
+    /*"university_name":"string",*/
+    "country":"string",
+    "world_rank":"number",
+    "teaching":"number",
+    "international":"number",
+    "research":"number",
+    "citations":"number",
+    "income":"number",
+    "total_score":"number",
+    "num_students":"number",
+    "student_staff_ratio":"number",
+    "international_students":"number",
+    "female_male_ratio":"number",
+    "year":"date"
+    })
+    .alpha(0.25)
+    // .composite("darken")
+    .mode("queue")
+    .rate(60)
+    .margin({ top: 24, left: 25, bottom: 12, right: 0 })
+    .autoscale()
+    .color(color)
+    .reorderable()
+    .render()
+    .brushMode("1D-axes");
+
+
+var grid = d3.divgrid();
+  grid.columns(["world_rank", "university_name", "country", "total_score", "year"]);
+  d3.select("#grid")
+    .datum(data.slice(0,10))
+    .call(grid)
+    .selectAll(".row")
+    .on({
+      "mouseover": function(d) { parcoords.highlight([d]) },
+      "mouseout": parcoords.unhighlight
+    });
+
+  // update data table on brush event
+  parcoords.on("brush", function(d) {
+    d3.select("#grid")
+      .datum(d.slice(0,10))
+      .call(grid)
+      .selectAll(".row")
+      .on({
+        "mouseover": function(d) { parcoords.highlight([d]) },
+        "mouseout": parcoords.unhighlight
+      });
+  });
+
+
+});
+
+</script>

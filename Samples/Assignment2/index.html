@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_css/main.css">
+<link rel="stylesheet" href="src/radar-chart.css">
+<head>
+  <style>
+    .radar-chart .area {
+      fill-opacity: 0.5;
+    }
+    .radar-chart.focus .area {
+      fill-opacity: 0.2;
+    }
+    .radar-chart.focus .area.focused {
+      fill-opacity: 0.8;
+    }
+    .area.caltech, .caltech .circle, .area.oxford, .oxford .circle, .area.eth_zurich, .eth_zurich .circle, .area.toronto, .toronto .circle, .area.uhk, .uhk .circle, .area.utokyo, .utokyo .circle, .area.snu, .snu .circle, .area.melbourne, .melbourne .circle, .area.peking, .peking .circle {
+      fill: #F4FF52;
+      stroke: none;
+    }
+    .area.stanford, .stanford .circle, .area.cambridge, .cambridge .circle, .area.epfl, .epfl .circle, .area.ubc, .ubc .circle, .area.hkust, .hkust .circle, .area.kyotou, .kyotou .circle, .area.pus, .pus .circle, .area.anu, .anu .circle, .area.tsinghua, .tsinghua .circle {
+      fill: #FF8360;
+      stroke: none;
+    }
+    .area.mit, .mit .circle, .area.icl, .icl .circle, .area.basel, .basel .circle, .area.mcgill, .mcgill .circle, .area.cuhk, .cuhk .circle, .area.tohokuu, .tohokuu .circle, .area.kaist, .kaist .circle, .area.sydney, .sydney .circle, .area.fudan, .fudan .circle {
+      fill: #1EECFC;
+      stroke: none;
+    }
+    .legendText {
+      background-color: #D3D3D3;
+    }
+    .no1Text {
+        color:#F4FF52;
+        background-color: #D3D3D3;
+        font-weight:bold;
+    }
+    .no2Text {
+        color:#FF8360;
+        background-color: #D3D3D3;
+        font-weight:bold;
+    }
+    .no3Text {
+        color:#1EECFC;
+        background-color: #D3D3D3;
+        font-weight:bold;
+    }
+  </style>
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+  <script type="text/javascript" src="src/radar-chart.js"></script>
+
+  <script type="text/javascript">
+    RadarChart.defaultConfig.color = function() {};
+    RadarChart.defaultConfig.levels = 5;
+    RadarChart.defaultConfig.radius = 2;
+    RadarChart.defaultConfig.w = 300;
+    RadarChart.defaultConfig.h = 300;
+  </script>
+
+  <script type="text/javascript">
+    var data_usa = [
+      {
+        className: 'mit', // optional can be used for styling
+        info: 'MIT',
+        axes: [
+          {axis: "Teaching", value: 89.4}, 
+          {axis: "International", value: 84}, 
+          {axis: "Research", value: 88.6},  
+          {axis: "Citations", value: 99.7},  
+          {axis: "Income", value: 95.4}
+        ]
+      },
+      {
+        className: 'stanford', // optional can be used for styling
+        info: 'Stanford',
+        axes: [
+          {axis: "Teaching", value: 92.5}, 
+          {axis: "International", value: 76.3}, 
+          {axis: "Research", value: 96.2},  
+          {axis: "Citations", value: 99.9},  
+          {axis: "Income", value: 73.1}
+        ]
+      },
+      {
+        className: 'caltech', // optional can be used for styling
+        info: 'Caltech',
+        axes: [
+          {axis: "Teaching", value: 95.6}, 
+          {axis: "International", value: 64}, 
+          {axis: "Research", value: 97.6},  
+          {axis: "Citations", value: 99.8},  
+          {axis: "Income", value: 97.8}
+        ]
+      }
+    ];
+    var data_uk = [
+      {
+        className: 'icl', // optional can be used for styling
+        info: 'Imperial College London',
+        axes: [
+          {axis: "Teaching", value: 84.6}, 
+          {axis: "International", value: 92.7}, 
+          {axis: "Research", value: 88.3},  
+          {axis: "Citations", value: 89.4},  
+          {axis: "Income", value: 72.7}
+        ]
+      },
+      {
+        className: 'cambridge', // optional can be used for styling
+        info: 'Cambridge',
+        axes: [
+          {axis: "Teaching", value: 89.7}, 
+          {axis: "International", value: 87.8}, 
+          {axis: "Research", value: 95.6},  
+          {axis: "Citations", value: 95.2},  
+          {axis: "Income", value: 51.1}
+        ]
+      },
+      {
+        className: 'oxford', // optional can be used for styling
+        info: 'Oxford',
+        axes: [
+          {axis: "Teaching", value: 88.6}, 
+          {axis: "International", value: 90.7}, 
+          {axis: "Research", value: 97.7},  
+          {axis: "Citations", value: 95.5},  
+          {axis: "Income", value: 72.9}
+        ]
+      }
+    ];
+    var data_switzerland = [
+      {
+        className: 'basel', // optional can be used for styling
+        info: 'University of Basel',
+        axes: [
+          {axis: "Teaching", value: 39.5}, 
+          {axis: "International", value: 94.7}, 
+          {axis: "Research", value: 33.1},  
+          {axis: "Citations", value: 88.3},  
+          {axis: "Income", value: 99.9}
+        ]
+      },
+      {
+        className: 'epfl', // optional can be used for styling
+        info: 'EPFL',
+        axes: [
+          {axis: "Teaching", value: 61.3}, 
+          {axis: "International", value: 98.6}, 
+          {axis: "Research", value: 67.5},  
+          {axis: "Citations", value: 94.6},  
+          {axis: "Income", value: 65.4}
+        ]
+      },
+      {
+        className: 'eth_zurich', // optional can be used for styling
+        info: 'ETH Zurich',
+        axes: [
+          {axis: "Teaching", value: 77}, 
+          {axis: "International", value: 97.9}, 
+          {axis: "Research", value: 95},  
+          {axis: "Citations", value: 91.1},  
+          {axis: "Income", value: 80}
+        ]
+      }
+    ];
+    var data_ca = [
+      {
+        className: 'mcgill', // optional can be used for styling
+        info: 'McGill University',
+        axes: [
+          {axis: "Teaching", value: 66.1}, 
+          {axis: "International", value: 85.5}, 
+          {axis: "Research", value: 72.1},  
+          {axis: "Citations", value: 78.9},  
+          {axis: "Income", value: 40.3}
+        ]
+      },
+      {
+        className: 'ubc', // optional can be used for styling
+        info: 'University of British Columbia',
+        axes: [
+          {axis: "Teaching", value: 60.2}, 
+          {axis: "International", value: 90.5}, 
+          {axis: "Research", value: 73.2},  
+          {axis: "Citations", value: 91.5},  
+          {axis: "Income", value: 42.6}
+        ]
+      },
+      {
+        className: 'toronto', // optional can be used for styling
+        info: 'University of Toronto',
+        axes: [
+          {axis: "Teaching", value: 75.9}, 
+          {axis: "International", value: 77.8}, 
+          {axis: "Research", value: 89.3},  
+          {axis: "Citations", value: 90.9},  
+          {axis: "Income", value: 49.1}
+        ]
+      }
+    ];
+    var data_hk = [
+      {
+        className: 'cuhk', // optional can be used for styling
+        info: 'CUHK',
+        axes: [
+          {axis: "Teaching", value: 41.5}, 
+          {axis: "International", value: 81.1}, 
+          {axis: "Research", value: 48.5},  
+          {axis: "Citations", value: 68.4},  
+          {axis: "Income", value: 37.5}
+        ]
+      },
+      {
+        className: 'hkust', // optional can be used for styling
+        info: 'HKUST',
+        axes: [
+          {axis: "Teaching", value: 49.4}, 
+          {axis: "International", value: 80.5}, 
+          {axis: "Research", value: 66.1},  
+          {axis: "Citations", value: 82.6},  
+          {axis: "Income", value: 68.1}
+        ]
+      },
+      {
+        className: 'uhk', // optional can be used for styling
+        info: 'University of Hong Kong',
+        axes: [
+          {axis: "Teaching", value: 64.6}, 
+          {axis: "International", value: 99.5}, 
+          {axis: "Research", value: 72.8},  
+          {axis: "Citations", value: 70.1},  
+          {axis: "Income", value: 53.7}
+        ]
+      }  
+    ];
+    var data_japan = [
+      {
+        className: 'tohokuu', // optional can be used for styling
+        info: 'Tohoku University',
+        axes: [
+          {axis: "Teaching", value: 45.3}, 
+          {axis: "International", value: 29.3}, 
+          {axis: "Research", value: 42.7},  
+          {axis: "Citations", value: 49.4},  
+          {axis: "Income", value: 74.7}
+        ]
+      },
+      {
+        className: 'kyotou', // optional can be used for styling
+        info: 'Kyoto University',
+        axes: [
+          {axis: "Teaching", value: 70.6}, 
+          {axis: "International", value: 26.1}, 
+          {axis: "Research", value: 69.3},  
+          {axis: "Citations", value: 46.6},  
+          {axis: "Income", value: 79}
+        ]
+      },
+      {
+        className: 'utokyo', // optional can be used for styling
+        info: 'University of Tokyo',
+        axes: [
+          {axis: "Teaching", value: 81.4}, 
+          {axis: "International", value: 30.3}, 
+          {axis: "Research", value: 83},  
+          {axis: "Citations", value: 60.9},  
+          {axis: "Income", value: 50.8}
+        ]
+      }
+    ];
+    var data_sk = [
+      {
+        className: 'kaist', // optional can be used for styling
+        info: 'KAIST',
+        axes: [
+          {axis: "Teaching", value: 43.3}, 
+          {axis: "International", value: 33.9}, 
+          {axis: "Research", value: 40.5},  
+          {axis: "Citations", value: 75.9},  
+          {axis: "Income", value: 100}
+        ]
+      },
+      {
+        className: 'pus', // optional can be used for styling
+        info: 'POSTECH',
+        axes: [
+          {axis: "Teaching", value: 49.1}, 
+          {axis: "International", value: 33.7}, 
+          {axis: "Research", value: 47.1},  
+          {axis: "Citations", value: 76.7},  
+          {axis: "Income", value: 100}
+        ]
+      }, 
+      {
+        className: 'snu', // optional can be used for styling
+        info: 'Seoul National University',
+        axes: [
+          {axis: "Teaching", value: 66.5}, 
+          {axis: "International", value: 30.9}, 
+          {axis: "Research", value: 70.5},  
+          {axis: "Citations", value: 50},  
+          {axis: "Income", value: 85.4}
+        ]
+      }
+    ];
+    var data_aus = [
+      {
+        className: 'sydney', // optional can be used for styling
+        info: 'University of Sydney',
+        axes: [
+          {axis: "Teaching", value: 54.3}, 
+          {axis: "International", value: 84.4}, 
+          {axis: "Research", value: 68.1},  
+          {axis: "Citations", value: 77.5},  
+          {axis: "Income", value: 72.4}
+        ]
+      },
+      {
+        className: 'anu', // optional can be used for styling
+        info: 'ANU',
+        axes: [
+          {axis: "Teaching", value: 54.7}, 
+          {axis: "International", value: 93.3}, 
+          {axis: "Research", value: 77.3},  
+          {axis: "Citations", value: 72.3},  
+          {axis: "Income", value: 48}
+        ]
+      },
+      {
+        className: 'melbourne', // optional can be used for styling
+        info: 'University of Melbourne',
+        axes: [
+          {axis: "Teaching", value: 62}, 
+          {axis: "International", value: 87.1}, 
+          {axis: "Research", value: 75.5},  
+          {axis: "Citations", value: 86.6},  
+          {axis: "Income", value: 64.6}
+        ]
+      }  
+    ];
+    var data_china = [
+      {
+        className: 'fudan', // optional can be used for styling
+        info: 'Fudan University',
+        axes: [
+          {axis: "Teaching", value: 44.7}, 
+          {axis: "International", value: 38.6}, 
+          {axis: "Research", value: 30.4},  
+          {axis: "Citations", value: 61.1},  
+          {axis: "Income", value: 28}
+        ]
+      },
+      {
+        className: 'tsinghua', // optional can be used for styling
+        info: 'Tsinghua University',
+        axes: [
+          {axis: "Teaching", value: 73.3}, 
+          {axis: "International", value: 39.5}, 
+          {axis: "Research", value: 83},  
+          {axis: "Citations", value: 58.8},  
+          {axis: "Income", value: 100}
+        ]
+      },
+      {
+        className: 'peking', // optional can be used for styling
+        info: 'Peking University',
+        axes: [
+          {axis: "Teaching", value: 77.8}, 
+          {axis: "International", value: 49.2}, 
+          {axis: "Research", value: 72.4},  
+          {axis: "Citations", value: 69.1},  
+          {axis: "Income", value: 100}
+        ]
+      }
+    ];
+  </script>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <h1>2016 Times World University Rankings</h1>
+      <h2>Attributes of top 3 schools by country</h2>
+      <br>
+      <h2><span class="legendText"><span class="no1Text">#1</span> <span class="no2Text">#2</span> <span class="no3Text">#3</span> ranked unversity within country</span></h2>
+    </div>
+    <div id="chart-container">
+      <div id="title1"><h2>United States</h2></div>
+      <div id="title2"><h2>United Kingdom</h2></div>
+      <div id="title3"><h2>Switzerland</h2></div>
+      <div id="usa-container" class="usa-container"></div><div id="uk-container" class="uk-container"></div><div id="switzerland-container" class="switzerland-container"></div>
+      <div id="title4"><h2>Canada</h2></div>
+      <div id="title5"><h2>Hong Kong</h2></div>
+      <div id="title6"><h2>Japan</h2></div>
+      <div id="ca-container" class="ca-container"></div><div id="hk-container" class="hk-container"></div><div id="japan-container" class="japan-container"></div>
+      <div id="title4"><h2>South Korea</h2></div>
+      <div id="title5"><h2>Australia</h2></div>
+      <div id="title6"><h2>China</h2></div>
+      <div id="sk-container" class="sk-container"></div><div id="aus-container" class="aus-container"></div><div id="china-container" class="china-container"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    RadarChart.draw(".usa-container", data_usa);
+    RadarChart.draw(".uk-container", data_uk);
+    RadarChart.draw(".switzerland-container", data_switzerland);
+    RadarChart.draw(".ca-container", data_ca);
+    RadarChart.draw(".hk-container", data_hk);
+    RadarChart.draw(".japan-container", data_japan);
+    RadarChart.draw(".sk-container", data_sk);
+    RadarChart.draw(".aus-container", data_aus);
+    RadarChart.draw(".china-container", data_china);
+  </script>
+</body>
+</html>

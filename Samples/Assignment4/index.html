@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<!--Defines angular app for the page-->
+<html ng-app="RadarChart">
+
+<head>
+  <meta charset="utf-8">
+  <title>D3 Radar Chart</title>
+
+  <!--Bootstrap and Google Fonts Stylesheets-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" />
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Cantarell'  type='text/css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'  type='text/css'>
+
+  <!--Custom Style Sheet-->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<!--Creating a controller as radar-->
+<body ng-controller="MainCtrl as radar">
+
+  <header >
+    <h1> An Interactive Visualization using D3 </h1>
+    <p>by</p>
+    <h3>Keshav Potluri, Pratik Nadagouda and Sai Dulla<h3>
+  </header>
+
+  <div class="container">
+
+  <!-- main content -->
+  <div class="main container">
+    <h1 id="header1">Scores Across World University Groups</h1>
+
+    <h3>This radar plot shows the average scores of the University Groups based on rankings across categories for the years 2011-2016.<br><br>
+        - Select the year from the dropdown to view the appropriate chart.<br>
+        - Use the configuration options to modify the chart. <br>
+        - Hover on individual points to see the details.
+    </h3>
+    <br>
+
+    <!-- visualization -->
+    <div class="visualization">
+      <h2 id="header2"> Scores for university groups for the year {{radar.exampleSelected}}</h2>
+      <div class="visualization col-md-9">
+
+        <!--Custom directive using angular. csv and config properties bound to properties in controller.-->
+        <radar csv="radar.csv" config="radar.config"></radar>
+      </div>
+
+      <!-- configuration -->
+      <div class="configuration col-md-3">
+        <form>
+          <h3>Select Year:
+            <!--Binds options to radar.examples. Binds selected item to example selected. Fires change method with the selected example.-->
+            <select ng-options="example for example in radar.examples" ng-model="radar.exampleSelected" ng-change="radar.selectExample(radar.exampleSelected)"></select>
+          </h3>
+
+          <h3>Chart Configuration Options</h3>
+
+          <!--Binding parameters to values in config-->
+          <div class="form-group">
+            <label>Width:</label>
+            <input type="number" class="form-control-inline" step="50" ng-model="radar.config.w" />
+            <label>Height:</label>
+            <input type="number" class="form-control-inline" step="50" ng-model="radar.config.h" />
+          </div>
+          <div class="form-group">
+            <label>Levels:</label>
+            <input type="number" class="form-control-inline" step="1" ng-model="radar.config.levels" />
+          </div>
+          <div class="form-group">
+
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showLevels" />Show Levels</label>
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showAxes" />Show Axes</label>
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showVertices" />Show Vertices</label>
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showPolygons" />Show Polygons</label>
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showLegend" />Show Legend</label>
+            <label class="checkbox"><input type="checkbox" ng-model="radar.config.showAxesLabels" />Show Axes Labels</label>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  </div>
+  <!-- <hr /> -->
+
+  <!-- data/file preview -->
+  <!-- <div class="preview">
+    <h2>Data</h2>
+    <pre>{{ radar.csv }}</pre>
+  </div> -->
+
+</div>
+
+  <!--Section for parallel graph-->
+  <div class="darkSection">
+    <div class="container parallelGraph" id="parallelGraph">
+      <br>
+      <h1>World University Rankings</h1>
+      <h3>This parallel coordinates chart shows the data of the top 30 universities for the years 2011-2016. </br></br>
+          - Drag on an axis to begin a brush. </br>
+          - Click the axis to remove the brush. </br>
+          - Drag around axis names to reorder them.</h3>
+      <br>
+    </div>
+    <br>
+  </div>
+  <footer>
+    <div class="container">
+      <h3> Created using D3.js and AngularJS.</h3>
+    <br>
+    </div>
+  </footer>
+
+  <!-- scripts -->
+  <script src="http://code.angularjs.org/1.3.5/angular.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="app.js"></script>
+  <script src="radar.js"></script>
+  <script src="radarDraw.js"></script>
+  <script src="parallelChart.js"></script>
+  <!-- <script>
+    // Hack to make this example display correctly in an iframe on bl.ocks.org
+    d3.select(self.frameElement).style("height", "1000px");
+  </script> -->
+</body>
+
+</html>

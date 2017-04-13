@@ -1,0 +1,495 @@
+<!--
+Code for the Parallenl Coordinates and Radar Charts used in our visualization.
+Some code has been taken and modified from:
+http://bl.ocks.org/jasondavies/1341281 (Parallel Coordinates)
+https://github.com/alangrafu/radar-chart-d3 (Radar Chart)
+http://bl.ocks.org/ABSegler/9791707 (Parallel Coordinates tool tip)
+
+Data has been loaded from the file timesData_rcMod.csv and /data/data.js
+-->
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="./src/radar-chart.css">
+<head>
+  <style>
+
+    svg {
+      font: 12px sans-serif;
+    }
+
+    .background path {
+      fill: none;
+      stroke: PaleTurquoise;
+      shape-rendering: crispEdges;
+    }
+
+    .foreground path {
+      fill: none;
+      stroke: Teal;
+    }
+
+    .brush .extent {
+      fill-opacity: .3;
+      stroke: #fff;
+      shape-rendering: crispEdges;
+    }
+
+    .axis line,
+    .axis path {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .axis text {
+      text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+      cursor: move;
+    }
+    /* tooltip from http://bl.ocks.org/ABSegler/9791707 */
+    .tooltip {   
+      background-color: rgba(220,220,220,0.5);
+      color: #333;
+      margin: 10px;
+      height: 25px;
+      padding-right: 10px;
+      padding-left: 10px; 
+      padding-top: 10px;
+      -webkit-border-radius:10px;
+      -moz-border-radius:10px;
+      border-radius:10px;
+    }
+    body {
+      padding: 20px;
+    }
+    .radar-chart .area {
+      fill-opacity: 0.2;
+    }
+    .radar-chart.focus .area {
+      fill-opacity: 0.3;
+    }
+    .radar-chart.focus .area.focused {
+      fill-opacity: 0.9;
+    }
+    .area.germany, .germany .circle {
+      fill: #FFD700;
+      stroke: none;
+    }
+    /*.area.CalTech, .CalTech .circle {
+      fill: #FFD700;
+      stroke: none;
+    }
+    .area.Oxford, .Oxford .circle {
+      fill: #FFD700;
+      stroke: none;
+    }
+    .area.Stanford, .Stanford .circle {
+      fill: #FFD700;
+      stroke: none;
+    }*/
+    .area.argentina, .argentina .circle {
+      fill: #ADD8E6;
+      stroke: none;
+    }
+    .footer-title {
+      margin-left: 0px;
+    }
+
+    .centered {
+      text-align: center;
+    }
+  </style>
+  <header>
+    <title>World University Rankings</title>
+  </header>
+
+
+
+  <script type="text/javascript" src="//d3js.org/d3.v3.js"></script>
+
+  <script>
+    // tooltip from http://bl.ocks.org/ABSegler/9791707
+    var tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .text("a simple tooltip")
+        .attr("class","tooltip");
+
+    var margin = {top: 30, right: 10, bottom: 10, left: 150},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal().rangePoints([0, width], 1),
+        y = {},
+        dragging = {};
+
+    var line = d3.svg.line(),
+        axis = d3.svg.axis().orient("left"),
+        background,
+        foreground;
+
+    // add an overall title for our page
+    d3.select("body").append("h1").text("World University Rankings, 2011-2016")
+      .attr("class", "centered");
+
+    // add a description of our overall viz page
+    d3.select("body").append("div").text("University rankings are regularly used to assess and compare their quality. With the following visualizations we will explore the 'Times Higher Education World University Ranking' data from 2011 to 2016 to understand what variables may contribute to high and low ranked Universities.");
+
+    // add a title for rena's chart
+    d3.select("body").append("h2").text("Top 100 World Universities, 2011-2016");
+
+    // create a special svg var for rena's code as we both had svg prior to merge
+    var svg_rena = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+    // load rena's data file
+    d3.csv("./data/timesData_rcMod.csv", function(error, schools) {
+
+      // Extract the list of dimensions and create a scale for each.
+      x.domain(dimensions = d3.keys(schools[0]).filter(function(d) {
+        // for world rank, we want to start with 1 at the top
+        if (d === "World Rank")
+            {return (y[d] = d3.scale.linear()
+            .domain(d3.extent(schools, function(p) { return +p[d]; }))
+            .range([1, height]));}
+        // for all the other axis, we want lower numbers at the bottom
+        else
+            {return d != "Country" && d != "Year" &&(y[d] = d3.scale.linear()
+            .domain(d3.extent(schools, function(p) { return +p[d]; }))
+            .range([height, 0]));}
+      }));
+
+
+      // add paleTurquoise background lines for context.
+      background = svg_rena.append("g")
+          .attr("class", "background")
+        .selectAll("path")
+          .data(schools)
+        .enter().append("path")
+          .attr("d", path);
+
+      // add brushed Teal foreground lines for focus, but when mousing over
+      // a single line, highlight it yellow and display the university's country.
+      // this tooltip code was largely lifted from http://bl.ocks.org/ABSegler/9791707.
+      foreground = svg_rena.append("g")
+          .attr("class", "foreground")
+        .selectAll("path")
+          .data(schools)
+        .enter().append("path")
+          .attr("d", path)
+          .on("mouseover", function(n){
+        d3.select(this).transition().duration(100)
+            .style({'stroke' : '#FF0'})
+            .style({'stroke-width' : '3'});
+        tooltip.text(n.Country);
+        return tooltip.style("visibility", "visible");
+          })
+          .on("mousemove", function(){return tooltip.style("top", (event.pageY-8)+"px").style("left",(event.pageX+8)+"px");})
+          .on("mouseout", function(d){
+        d3.select(this).transition().duration(100)
+        .style({'stroke': 'Teal' })
+        .style({'stroke-width' : '1'});
+        return tooltip.style("visibility", "hidden");
+          });
+
+      // add a group element for each dimension.
+      var g = svg_rena.selectAll(".dimension")
+          .data(dimensions)
+        .enter().append("g")
+          .attr("class", "dimension")
+          .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+          .call(d3.behavior.drag()
+            .origin(function(d) { return {x: x(d)}; })
+            .on("dragstart", function(d) {
+              dragging[d] = x(d);
+              background.attr("visibility", "hidden");
+            })
+            .on("drag", function(d) {
+              dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+              foreground.attr("d", path);
+              dimensions.sort(function(a, b) { return position(a) - position(b); });
+              x.domain(dimensions);
+              g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+            })
+            .on("dragend", function(d) {
+              delete dragging[d];
+              transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+              transition(foreground).attr("d", path);
+              background
+                  .attr("d", path)
+                .transition()
+                  .delay(500)
+                  .duration(0)
+                  .attr("visibility", null);
+            }));
+
+      // Add an axis and title.
+      g.append("g")
+          .attr("class", "axis")
+          .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+        .append("text")
+          .style("text-anchor", "middle")
+          .attr("y", -9)
+          .text(function(d) { return d; });
+
+      // Add and store a brush for each axis.
+      g.append("g")
+          .attr("class", "brush")
+          .each(function(d) {
+            d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+          })
+        .selectAll("rect")
+          .attr("x", -8)
+          .attr("width", 16);
+    });
+
+    function position(d) {
+      var v = dragging[d];
+      return v == null ? x(d) : v;
+    }
+
+    function transition(g) {
+      return g.transition().duration(500);
+    }
+
+    // Returns the path for a given data point.
+    function path(d) {
+      return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+    }
+
+    function brushstart() {
+      d3.event.sourceEvent.stopPropagation();
+    }
+
+    // Handles a brush event, toggling the display of foreground lines.
+    function brush() {
+      var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
+          extents = actives.map(function(p) { return y[p].brush.extent(); });
+      foreground.style("display", function(d) {
+        return actives.every(function(p, i) {
+          return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+        }) ? null : "none";
+      });
+    }
+
+  </script>
+
+  <script type="text/javascript">
+    /*var data = [
+      {
+        className: 'germanyyyyy', // optional can be used for styling
+        axes: [
+          {axis: "strength", value: 13},
+          {axis: "intelligence", value: 6},
+          {axis: "charisma", value: 5},
+          {axis: "dexterity", value: 9},
+          {axis: "luck", value: 2}
+        ]
+      },
+      {
+        className: 'argentinaaaaaa',
+        axes: [
+          {axis: "strength", value: 6},
+          {axis: "intelligence", value: 7},
+          {axis: "charisma", value: 10},
+          {axis: "dexterity", value: 13},
+          {axis: "luck", value: 9}
+        ]
+      }
+    ];
+    console.log(data)*/
+    /*var data = [];
+
+    d3.csv("/data/timesData.csv", function(csv){
+      for(i=0; i<2; i++){
+        data.push(
+        {
+          className: 'germanyyyyy',
+          axes: [
+            {axis: "strength", value: 13},
+            {axis: "intelligence", value: 6},
+            {axis: "charisma", value: 5},
+            {axis: "dexterity", value: 9},
+            {axis: "luck", value: 2}
+          ]
+        }
+          );
+      }
+      console.log(data)
+    });
+
+    function randomDataset() {
+      return data.map(function(d) {
+        return {
+          className: d.className,
+          axes: d.axes.map(function(axis) {
+            return {axis: axis.axis, value: Math.ceil(Math.random() * 10)};
+          })
+        };
+      });
+    }*/
+  </script>
+  <script type="text/javascript" src="./src/radar-chart.js"></script>
+
+  <script type="text/javascript" src="./data/data.js"></script>
+
+  <script type="text/javascript">
+    RadarChart.defaultConfig.color = function() {};
+    RadarChart.defaultConfig.radius = 3;
+  </script>
+</head>
+<body>
+
+  <script type="text/javascript">
+  </script>
+  
+  <h2>Key Metrics for High and Low Ranked Universities</h2>
+
+  <h3>Year: 2016</h3>
+
+  <div id="container1" style="display: inline;">
+  <div>Top 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container1').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_top_2016).call(chart);
+  </script>
+  </div>
+
+  <div id="container2" style="display: inline; float: right; margin-right: 150px;">
+  <div>Bottom 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container2').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_bottom_2016).call(chart);
+  </script>
+  </div>
+
+  <h3>Year: 2015</h3>
+
+  <div id="container3" style="display: inline;">
+  <div>Top 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container3').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_top_2015).call(chart);
+  </script>
+</div>
+
+<div id="container4" style="display: inline; float: right; margin-right: 150px;">
+ <div>Bottom 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container4').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_bottom_2015).call(chart);
+  </script>
+</div>
+
+  <h3>Year: 2014</h3>
+
+<div id="container5" style="display: inline;">
+  <div>Top 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container5').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_top_2014).call(chart);
+  </script>
+</div>
+
+<div id="container6" style="display: inline; float: right; margin-right: 150px;">
+ <div>Bottom 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container6').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_bottom_2014).call(chart);
+  </script>
+</div>
+
+  <h3>Year: 2013</h3>
+
+<div id="container7" style="display: inline;">
+ <div>Top 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container7').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_top_2013).call(chart);
+  </script>
+</div>
+
+<div id="container8" style="display: inline; float: right; margin-right: 150px;">
+ <div>Bottom 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container8').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_bottom_2013).call(chart);
+  </script>
+</div>
+
+  <h3>Year: 2012</h3>
+
+<div id="container9" style="display: inline;">
+ <div>Top 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container9').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_top_2012).call(chart);
+  </script>
+</div>
+
+<div id="container10" style="display: inline; float: right; margin-right: 150px;">
+  <div>Bottom 3 Schools</div>
+  <script type="text/javascript">
+  var chart = RadarChart.chart();
+  var cfg = chart.config(); // retrieve default config
+  chart.config({w: cfg.w * 0.75, h: cfg.h * 0.75, color: d3.scale.category10()});
+  var svg = d3.select('#container10').append('svg')
+    .attr('width', cfg.w)
+    .attr('height', cfg.h + cfg.h / 4);
+  svg.append('g').classed('single', 1).datum(data_bottom_2012).call(chart);
+  </script>
+</div>
+
+</body>
+</html>

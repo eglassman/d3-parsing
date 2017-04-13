@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+<h2>Comparing Two Schools on Times University World Ranking Factors</h2>
+<h4>Please select two schools and a year for comparison</h4>
+<div class='box' id='d0'></div>
+
+<div id="sch1">
+<select id="school1" >
+  <option value="Harvard University">Harvard University</option>
+  <option value="California Institute of Technology">California Institute of Technology</option>
+  <option value="University of Oxford">University of Oxford</option>
+  <option value="Stanford University">Stanford University</option>
+  <option value="University of Cambridge">University of Cambridge</option>
+  <option value="Massachusetts Institute of Technology">Massachusetts Institute of Technology</option>
+  <option value="Princeton University">Princeton University</option>
+  <option value="University of California, Berkeley">University of California, Berkeley</option>
+  <option value="Imperial College London">Imperial College London</option>
+  <option value="Yale University">Yale University</option>
+ <!--  <option value="University of California, Los Angeles">University of California, Los Angeles</option>
+  <option value="University of Chicago">University of Chicago</option>
+  <option value="Johns Hopkins University">Johns Hopkins University</option>
+    <option value="Cornell University">Cornell University</option>
+  <option value="ETH Zurich ?Swiss Federal Institute of Technology Zurich">ETH Zurich ?Swiss Federal Institute of Technology Zurich</option>
+  <option value="University of Michigan">University of Michigan</option> -->
+</select>
+</div>
+<p></p>
+<div class='box' id='d1'></div>
+
+<div id='sch2'>
+<select id="school2">
+    <option value="Harvard University">Harvard University</option>
+  <option value="California Institute of Technology">California Institute of Technology</option>
+
+  <option value="University of Oxford">University of Oxford</option>
+  <option value="Stanford University">Stanford University</option>
+  <option value="University of Cambridge">University of Cambridge</option>
+  <option value="Massachusetts Institute of Technology">Massachusetts Institute of Technology</option>
+  <option value="Princeton University">Princeton University</option>
+  <option value="University of California, Berkeley">University of California, Berkeley</option>
+  <option value="Imperial College London">Imperial College London</option>
+  <option value="Yale University">Yale University</option>
+  <!-- <option value="University of California, Los Angeles">University of California, Los Angeles</option>
+  <option value="University of Chicago">University of Chicago</option>
+  <option value="Johns Hopkins University">Johns Hopkins University</option>
+    <option value="Cornell University">Cornell University</option>
+  <option value="ETH Zurich ?Swiss Federal Institute of Technology Zurich">ETH Zurich ?Swiss Federal Institute of Technology Zurich</option>
+  <option value="University of Michigan">University of Michigan</option> -->
+
+</select>
+</div>
+<div id = "yr">
+<h3><form id="year_option">
+  <input type="radio" name="year" value="2011"> 2011&nbsp
+  <input type="radio" name="year" value="2012"> 2012&nbsp
+  <input type="radio" name="year" value="2013"> 2013&nbsp
+  <input type="radio" name="year" value="2014"> 2014&nbsp
+  <input type="radio" name="year" value="2015"> 2015&nbsp
+  <input type="radio" name="year" value="2016"> 2016 </n>
+</form></h3>
+</div>
+  
+</body>
+</html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="radar-chart.css">
+<!-- <link rel="stylesheet" href="style.css"> -->
+
+<style>
+body {
+  padding: 20px;
+}
+</style>
+
+<style>
+.radar-chart .area {
+  fill-opacity: 0.7;
+}
+.radar-chart.focus .area {
+  fill-opacity: 0.3;
+}
+.radar-chart.focus .area.focused {
+  fill-opacity: 0.9;
+}
+.area.germany, .germany .circle {
+  fill: #FFD700;
+  stroke: none;
+
+}
+.area.argentina, .argentina .circle {
+  fill: #ADD8E6;
+  stroke: none;
+}
+.box#d0{
+  width: 22px;
+  height: 22px;
+  background-color: #FFD700;
+float: left;
+margin-right: 10px;
+}
+
+.box#d1{
+  width: 22px;
+  height: 22px;
+  background-color: #ADD8E6;
+  float: left;
+  margin-right: 10px;
+}
+
+div.yr {
+  margin-right: auto;
+  margin-left: auto;
+
+   position: absolute;
+    bottom: 100px;
+    left: 75px;*/
+   /* left: 30px;*/
+    /*border: 3px solid #73AD21;*/
+}
+
+div.sch1{
+  float: right;
+  margin-top: 10px;
+}
+div.sch2{
+  float: right;
+  margin-top: 10px;
+}
+</style>
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="http://d3js.org/d3.v3.js"></script>
+<script src="https://rawgit.com/tpreusse/radar-chart-d3/master/src/radar-chart.js"></script>
+
+<script>
+RadarChart.defaultConfig.color = function() {};
+RadarChart.defaultConfig.radius = 3;
+RadarChart.defaultConfig.w = 400;
+RadarChart.defaultConfig.h = 400;
+</script>
+
+<span></span>
+
+<script>
+
+
+
+var sch1_selected = 'Harvard University';
+var sch2_selected = 'California Institute of Technology';
+//code for preventing duplicate selection from http://jsfiddle.net/x4E5Q/1/
+function preventDupes( select, index ) {
+    var options = select.options,
+        len = options.length;
+    while( len-- ) {
+        options[ len ].disabled = false;
+    }
+    select.options[ index ].disabled = true;
+    if( index === select.selectedIndex ) {
+        alert('You\'ve already selected the item "' + select.options[index].text + '".\n\nPlease choose another.');
+        this.selectedIndex = 0;
+    }
+}
+
+var select1 = select = document.getElementById( 'school1' );
+var select2 = select = document.getElementById( 'school2' );
+
+select1.onchange = function() {
+    preventDupes.call(this, select2, this.selectedIndex );
+};
+
+select2.onchange = function() {
+    preventDupes.call(this, select1, this.selectedIndex );
+};
+ 
+
+//school one
+$('#school1').on('change', function() {
+  sch1_selected = this.value;
+  //console.log( this.value ); // or $(this).val()
+  create ();
+});
+
+$('#school2').on('change', function() {
+  sch2_selected = this.value;
+  //console.log( this.value ); // or $(this).val()
+  create ();
+});
+
+var schools;
+var year_selected=2011;
+$("#year_option input").on("change", function(){
+  year_selected = $('input[name=year]:checked', '#year_option').val();
+   console.log(year_selected);
+  //  = yr;
+
+  var filtered_schools = schools.filter(function(row) {
+        return row['year']== year_selected;
+        console.log(filtered_schools);
+  });
+  render_radar(filtered_schools);
+
+})
+
+var data;
+function render_radar(d) {
+  d3.select('svg').remove();
+
+data = [
+{
+    className: "germany", // optional can be used for styling
+    axes: [
+      {axis: "Teaching", value: d[0]['teaching']}, 
+      {axis: "International", value: d[0]['international']}, 
+      {axis: "Reaserch", value: d[0]['research']},  
+      {axis: "Citations", value: d[0]['citations']},  
+      {axis: "Income", value: d[0]['income']}
+    ]
+  },
+  {
+    className: "argentina", // optional can be used for styling
+    axes: [
+      {axis: "Teaching", value: d[1]['teaching']}, 
+      {axis: "International", value: d[1]['international']}, 
+      {axis: "Reaserch", value: d[1]['research']},  
+      {axis: "Citations", value: d[1]['citations']},  
+      {axis: "Income", value: d[1]['income']}
+    ]
+  }
+];
+
+var chart = RadarChart.chart();
+var cfg = chart.config(); // retrieve default config
+var svg = d3.select('body').append('svg')
+  .attr('width', cfg.w + cfg.w + 50)
+  .attr('height', cfg.h + cfg.h / 4);
+svg.append('g').classed('single', 1).datum(randomDataset()).call(chart);
+
+}
+
+
+
+
+function create () {
+// var sch1 = sch1;  
+// //var sch1 = sch1_selected;
+
+//console.log(school1);
+d3.csv("timesData_short_radar.csv", function(error,school) {
+  //create();
+    schools = school.filter(function(row) {
+        return row['university_name']== sch1_selected  || row['university_name']== sch2_selected ;
+    })
+  
+
+    //console.log(schools.length  );
+
+    render_radar(schools);
+console.log(schools);   
+
+});
+
+}
+      
+//value for axis
+function randomDataset() {
+  return data.map(function(d) {
+    return {
+      className: d.className,
+      axes: d.axes.map(function(axis) {
+        return {axis: axis.axis, value: axis.value/*Math.ceil(Math.random() * 10)*/};
+      })
+    };
+  });
+}
+
+create();
+</script>

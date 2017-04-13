@@ -1,7 +1,0 @@
-start from ( end at )
-	extend range if there is chained modifier
-have a flag to include function call name or not
-use variable amount of samples
-pick function call that we want to search and print such as "extent" or "select"
-
-Look at d3 github page for class orderings

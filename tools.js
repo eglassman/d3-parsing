@@ -30,29 +30,35 @@ module.exports = {
 			var tag = parsed_html_flattened[i];
 			var loc = tag['__location'];
 			if (tag.nodeName == 'script') {
-				if (loc.startTag.endOffset == loc.endTag.startOffset){
-					//then this script tag has no textcontents; print the whole thing
-					//console.log('no contents', html_content.slice(loc.startOffset, loc.endOffset));
-				} else {
+				if (loc.startTag.endOffset != loc.endTag.startOffset){
 					js_content += "\n" + html_content.slice(loc.startTag.endOffset, loc.endTag.startOffset);
 				}
 			}
 		}
 
-		var parsed_d3 = esprima.parse(js_content, { range: true, loc: true });
+		var parsed_d3 = esprima.parse(js_content, { range: true });
 
 		traverse(parsed_d3, {pre: function(node, parent, prop, idx) {
-
+			if (parent != null && parent.type == "MemberExpression") {
+				return;
+			}
 			if (node.type != "CallExpression") {
 				return;
 			}
 			if (node.callee.property === undefined) {
 				return;
 			}
-			if (node.callee.object.name != "d3") {
+			grand_callee = node.callee;
+			while (grand_callee.object.type == "CallExpression") {
+				grand_callee = grand_callee.object.callee;
+				if (grand_callee.object === undefined) {
+					return;
+				}
+			}
+			if (grand_callee.object.name != "d3") {
 				return;
 			}
-			semantic_tag = node.callee.property.name;
+			semantic_tag = grand_callee.property.name;
 			if (!is_valid_semantic_tag(semantic_tag)) {
 				return;
 			}
@@ -61,10 +67,6 @@ module.exports = {
 				start = node.callee.range[1];
 			}
 			end = node.range[1];
-			if (parent.type == "MemberExpression") {
-				//start = Math.min(start, parent.range[0]);
-				//end = Math.max(end, parent.range[1]);
-			}
 			raw = js_content.slice(start, end);
 			if (main.HIDE_INNER_FUNCTIONS) {
 				for (var i = node.arguments.length - 1; i >= 0; i--) {

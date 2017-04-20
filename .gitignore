@@ -2,6 +2,7 @@
 
 # Project Specific
 node_modules
+Samples/mass_data
 
 ### macOS ###
 *.DS_Store

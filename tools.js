@@ -20,23 +20,31 @@ function is_valid_semantic_tag(tag) {
 
 module.exports = {
 	process_file : function(file_loc) {
+		if (!fs.existsSync(file_loc)) {
+			return null;
+		}
 		var result = "";
 		var html_content = fs.readFileSync(file_loc, 'utf8');
-		var parsed_html = parse5.parse(html_content, options);
-		var parsed_html_flattened = utils.flatten(parsed_html);
-		var js_content = "";
 
-		for (var i in parsed_html_flattened) {
-			var tag = parsed_html_flattened[i];
-			var loc = tag['__location'];
-			if (tag.nodeName == 'script') {
-				if (loc.startTag.endOffset != loc.endTag.startOffset){
-					js_content += "\n" + html_content.slice(loc.startTag.endOffset, loc.endTag.startOffset);
+		try {
+			var parsed_html = parse5.parse(html_content, options);
+			var parsed_html_flattened = utils.flatten(parsed_html);
+			var js_content = "";
+
+			for (var i in parsed_html_flattened) {
+				var tag = parsed_html_flattened[i];
+				var loc = tag['__location'];
+				if (tag.nodeName == 'script') {
+					if (loc.startTag.endOffset != loc.endTag.startOffset){
+						js_content += "\n" + html_content.slice(loc.startTag.endOffset, loc.endTag.startOffset);
+					}
 				}
-			}
+			}		
+		    var parsed_d3 = esprima.parse(js_content, { range: true });
 		}
-
-		var parsed_d3 = esprima.parse(js_content, { range: true });
+		catch(err) {
+		    return null;
+		}
 
 		traverse(parsed_d3, {pre: function(node, parent, prop, idx) {
 			if (parent != null && parent.type == "MemberExpression") {

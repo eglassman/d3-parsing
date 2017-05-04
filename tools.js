@@ -9,6 +9,7 @@ const escodegen = require('escodegen');
 //local dependencies
 const main = require('./main.js');
 
+//Look into the tags.json file to see if such a semantic tag exists
 function is_valid_semantic_tag(tag) {
 	for (var i = 0; i < main.FUNCTION_NAMES.length; i++) {
 		if (main.FUNCTION_NAMES[i].toLowerCase() == tag.toLowerCase()) {
@@ -26,6 +27,7 @@ module.exports = {
 		var result = "";
 		var html_content = fs.readFileSync(file_loc, 'utf8');
 
+		//Read the code from the sample file, HTML parse it, extract the first script tag contents, parse the contents as JS, then convert to AST using Esprima
 		try {
 			var parsed_html = parse5.parse(html_content, options);
 			var parsed_html_flattened = utils.flatten(parsed_html);
@@ -46,6 +48,7 @@ module.exports = {
 		    return null;
 		}
 
+		//Traverse the AST looking for code that fit the criteria
 		traverse(parsed_d3, {pre: function(node, parent, prop, idx) {
 			if (parent != null && parent.type == "MemberExpression") {
 				return;
@@ -76,6 +79,8 @@ module.exports = {
 			if (!is_valid_semantic_tag(semantic_tag)) {
 				return;
 			}
+			//At this point we know this is a piece of code we are intrested in
+			//Lets get it as text from the HTML file and append it to the output
 			start = node.range[0];
 			if (!main.INCLUDE_FUNCTION_NAME) {
 				start = node.callee.range[1];

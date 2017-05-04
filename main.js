@@ -10,6 +10,7 @@ if (process.argv.length != 7) {
 	process.exit();
 }
 
+//Read arguments
 var input_folder_loc = "Samples/";
 var output_file_loc = "output.js";
 exports.FUNCTION_NAMES = [process.argv[2]];
@@ -19,12 +20,14 @@ exports.HIDE_INNER_FUNCTIONS = (process.argv[5].toLowerCase() == 'true');
 exports.INCLUDE_ASSIGNMENT_SAMPLES = (process.argv[6].toLowerCase() == 'true');
 var output = "";
 
+//Figure out if the function name is a semantic tag instead
 var tags = JSON.parse(fs.readFileSync('tags.json', 'utf8'));
 if (tags.hasOwnProperty(exports.FUNCTION_NAMES[0])) {
 	exports.FUNCTION_NAMES = tags[exports.FUNCTION_NAMES[0]];
 	console.log("Looking for d3 functions: " + exports.FUNCTION_NAMES);
 }
 
+//Get all sample file locations to look at
 var samples = fs.readdirSync(input_folder_loc).filter(file => fs.statSync(path.join(input_folder_loc, file)).isDirectory());
 samples = samples.map(function(folder) { 
 	return input_folder_loc + folder + "/";
@@ -39,8 +42,9 @@ if (temp_index >= 0) {
 	});
 	samples = samples.concat(data);
 }
-var sample_count = 0;
 
+//Run analysis on all samples until the limit is reached
+var sample_count = 0;
 samples.some(function(sample_folder) {
 	if (!exports.INCLUDE_ASSIGNMENT_SAMPLES) {
 		if (sample_folder.indexOf("Assignment") > -1) {
@@ -48,7 +52,7 @@ samples.some(function(sample_folder) {
 		}
 	}
 	sample_loc = sample_folder + 'index.html';
-	result = tools.process_file(sample_loc);
+	result = tools.process_file(sample_loc); //this line does the code analysis
 	if (result == null || result.length == 0) {
 		return false;
 	}
@@ -58,11 +62,13 @@ samples.some(function(sample_folder) {
 	return (exports.SAMPLE_COUNT > 0 && sample_count >= exports.SAMPLE_COUNT);
 });
 
+//Format the output
 if (output.trim().length < 1) {
 	output = "None found.";
 }
 output = "// ----------------------\n// Results for '" + process.argv[2] + "'\n// ----------------------\n\n" + output;
 
+//Write to output to a file
 fs.writeFile(output_file_loc, output, function(err) {
     if(err) {
         return console.log(err);

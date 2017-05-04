@@ -1,5 +1,0 @@
-Histograms
-	histogram
-Brushes
-Chords
-	chord

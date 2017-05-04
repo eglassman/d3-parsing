@@ -63,7 +63,13 @@ module.exports = {
 					return;
 				}
 			}
-			if (grand_callee.object.name != "d3") {
+			call_name = "";
+			if (grand_callee.object.type == "MemberExpression") {
+				call_name = grand_callee.object.property.name;
+			} else {
+				call_name = grand_callee.object.name;
+			}
+			if (call_name != "d3") {
 				return;
 			}
 			semantic_tag = grand_callee.property.name;

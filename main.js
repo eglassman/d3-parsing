@@ -10,7 +10,7 @@ if (process.argv.length != 7) {
 	process.exit();
 }
 
-var input_folder_loc = "Samples/mass_data/";
+var input_folder_loc = "Samples/";
 var output_file_loc = "output.js";
 exports.FUNCTION_NAMES = [process.argv[2]];
 exports.SAMPLE_COUNT = parseInt(process.argv[3]);
@@ -26,6 +26,19 @@ if (tags.hasOwnProperty(exports.FUNCTION_NAMES[0])) {
 }
 
 var samples = fs.readdirSync(input_folder_loc).filter(file => fs.statSync(path.join(input_folder_loc, file)).isDirectory());
+samples = samples.map(function(folder) { 
+	return input_folder_loc + folder + "/";
+});
+mass_data_loc = input_folder_loc + "mass_data/";
+var temp_index = samples.indexOf(mass_data_loc);
+if (temp_index >= 0) {
+	samples.splice(temp_index, 1);
+	data = fs.readdirSync(mass_data_loc).filter(file => fs.statSync(path.join(mass_data_loc, file)).isDirectory());
+	data = data.map(function(folder) { 
+		return mass_data_loc + folder + "/";
+	});
+	samples = samples.concat(data);
+}
 var sample_count = 0;
 
 samples.some(function(sample_folder) {
@@ -34,7 +47,7 @@ samples.some(function(sample_folder) {
 			return false;
 		}
 	}
-	sample_loc = input_folder_loc + sample_folder + '/index.html';
+	sample_loc = sample_folder + 'index.html';
 	result = tools.process_file(sample_loc);
 	if (result == null || result.length == 0) {
 		return false;
